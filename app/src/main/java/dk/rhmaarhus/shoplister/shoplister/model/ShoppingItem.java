@@ -20,4 +20,5 @@ public class ShoppingItem {
         this.name = name;
     }
     public void flipMarked() {this.marked = !this.marked;}
+    public Boolean getMarked() {return this.marked;}
 }
