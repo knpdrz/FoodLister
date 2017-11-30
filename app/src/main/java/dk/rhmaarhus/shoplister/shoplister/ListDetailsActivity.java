@@ -3,7 +3,7 @@ package dk.rhmaarhus.shoplister.shoplister;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-public class ListDetails extends AppCompatActivity {
+public class ListDetailsActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
