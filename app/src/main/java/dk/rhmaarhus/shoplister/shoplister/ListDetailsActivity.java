@@ -8,8 +8,8 @@ import java.util.ArrayList;
 
 public class ListDetailsActivity extends AppCompatActivity {
 
-    IngredientsAdapter ingredientsAdapter;
-    ListView foodIngredientsListView;
+    ShoppingItemAdapter shoppingItemAdapter;
+    ListView shoppingItemListView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -26,8 +26,8 @@ public class ListDetailsActivity extends AppCompatActivity {
         ingredientList.add("risotto rice");
         ingredientList.add("Ben and Jerry's");
 
-        ingredientsAdapter = new IngredientsAdapter(this, ingredientList);
-        foodIngredientsListView = findViewById(R.id.foodIngredientsListView);
-        foodIngredientsListView.setAdapter(ingredientsAdapter);
+        shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList);
+        shoppingItemListView = findViewById(R.id.shoppingItemListView);
+        shoppingItemListView.setAdapter(shoppingItemAdapter);
     }
 }

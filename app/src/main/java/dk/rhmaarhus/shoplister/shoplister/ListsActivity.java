@@ -1,6 +1,5 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,10 +7,11 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
 

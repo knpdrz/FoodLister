@@ -19,7 +19,6 @@
         <activity android:name=".ShareActivity" />
         <activity android:name=".ListDetailsActivity" />
 
-        <!--<activity android:name=".ShareActivity"></activity>-->
     </application>
 
 </manifest>
