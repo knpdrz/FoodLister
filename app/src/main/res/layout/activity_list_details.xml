@@ -7,7 +7,7 @@
     tools:context="dk.rhmaarhus.shoplister.shoplister.ListDetailsActivity">
 
     <ListView
-        android:id="@+id/foodIngredientsListView"
+        android:id="@+id/shoppingItemListView"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"

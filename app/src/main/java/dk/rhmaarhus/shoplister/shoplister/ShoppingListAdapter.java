@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
+
 /**
  * Created by Moon on 30.11.2017.
  */

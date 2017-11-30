@@ -13,12 +13,12 @@ import java.util.ArrayList;
  * Created by hulda on 30.11.2017.
  */
 
-public class IngredientsAdapter extends BaseAdapter {
+public class ShoppingItemAdapter extends BaseAdapter {
     Context context;
     ArrayList<String> ingredients;
     String ingredient;
 
-    public IngredientsAdapter(Context c, ArrayList<String> ingredients){
+    public ShoppingItemAdapter(Context c, ArrayList<String> ingredients){
         this.context = c;
         this.ingredients = ingredients;
     }
@@ -52,7 +52,7 @@ public class IngredientsAdapter extends BaseAdapter {
         if(view == null){
             LayoutInflater demoInflater = (LayoutInflater)this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = demoInflater.inflate(R.layout.ingredients_item, null);
+            view = demoInflater.inflate(R.layout.shopping_item, null);
         }
         ingredient = ingredients.get(position);
         if(ingredient!=null && ingredient != ""){
@@ -63,8 +63,8 @@ public class IngredientsAdapter extends BaseAdapter {
     }
 
     private void setIngredientData(View view){
-        TextView ingredientItemTextView = (TextView)view.findViewById(R.id.ingredientItemTextView);
-        ingredientItemTextView.setText(ingredient);
+        TextView shoppingItemTextView = (TextView)view.findViewById(R.id.shoppingItemTextView);
+        shoppingItemTextView.setText(ingredient);
 
     }
 }
