@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShopLister</string>
+    <string name="title_activity_add_shopping_item">AddShoppingItemActivity</string>
 </resources>
