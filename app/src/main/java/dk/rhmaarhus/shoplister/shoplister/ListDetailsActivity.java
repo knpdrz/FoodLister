@@ -12,6 +12,7 @@ import java.util.ArrayList;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 
 public class ListDetailsActivity extends AppCompatActivity {
 
@@ -54,11 +55,14 @@ public class ListDetailsActivity extends AppCompatActivity {
     }
 
     private void prepareIngredientsList() {
-        ArrayList<String> ingredientList = new ArrayList<String>();
-        ingredientList.add("banana");
-        ingredientList.add("apple");
-        ingredientList.add("risotto rice");
-        ingredientList.add("Ben and Jerry's");
+        ArrayList<ShoppingItem> ingredientList = new ArrayList<ShoppingItem>();
+        ingredientList.add(new ShoppingItem("banana"));
+        ingredientList.add(new ShoppingItem("apple"));
+        ingredientList.add(new ShoppingItem("pear"));
+        ingredientList.add(new ShoppingItem("risotto rice"));
+        ShoppingItem item = new ShoppingItem("Caramel");
+        item.flipMarked();
+        ingredientList.add(item);
 
         shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList);
         shoppingItemListView = findViewById(R.id.shoppingItemListView);

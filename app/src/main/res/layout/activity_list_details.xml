@@ -28,3 +28,4 @@
         android:text="@string/share"
         android:id="@+id/shareButton"/>
 </LinearLayout>
+
