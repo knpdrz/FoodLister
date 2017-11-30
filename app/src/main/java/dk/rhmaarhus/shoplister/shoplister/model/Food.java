@@ -1,4 +1,4 @@
-package dk.rhmaarhus.shoplister.shoplister.models;
+package dk.rhmaarhus.shoplister.shoplister.model;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

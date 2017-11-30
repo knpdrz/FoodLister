@@ -14,7 +14,7 @@ import com.google.gson.Gson;
 import java.util.HashMap;
 import java.util.Map;
 
-import dk.rhmaarhus.shoplister.shoplister.models.Food;
+import dk.rhmaarhus.shoplister.shoplister.model.Food;
 
 /**
  * Created by rjkey on 30-11-2017.
