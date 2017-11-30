@@ -4,9 +4,9 @@
     android:layout_height="match_parent">
 
     <TextView
-        android:id="@+id/listNameTextView"
+        android:id="@+id/userNameTextView"
         android:layout_width="match_parent"
-        android:text="item name"
+        android:text="user name"
         android:layout_centerHorizontal="true"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
