@@ -5,5 +5,5 @@ package dk.rhmaarhus.shoplister.shoplister;
  */
 
 public class Globals {
-    public static final String LOG_TAG = "shopListerLog";
+    public static final String TAG = "shopListerLog";
 }

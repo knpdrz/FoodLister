@@ -6,12 +6,14 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import java.util.ArrayList;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LOG_TAG;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
 
 public class ListsActivity extends AppCompatActivity {
     private ShoppingListAdapter adapter;
@@ -19,10 +21,28 @@ public class ListsActivity extends AppCompatActivity {
 
     private ArrayList<ShoppingList> shoppingLists;
 
+    private EditText shoppingListEditText;
+    private Button addShoppingListButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
+
+        shoppingListEditText = findViewById(R.id.newListEditText);
+
+        addShoppingListButton = findViewById(R.id.addShoppingListButton);
+        addShoppingListButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //user wants to add a new shopping list
+                String newListName = shoppingListEditText.getText().toString();
+                if(newListName != null && !newListName.isEmpty()){
+                    addShoppingList(newListName);
+                }
+
+            }
+        });
 
         //setting shopping lists list that will be displayed in the list view
         shoppingLists = new ArrayList<ShoppingList>();
@@ -41,7 +61,11 @@ public class ListsActivity extends AppCompatActivity {
         prepareListView();
     }
 
-
+    private void addShoppingList(String listName){
+        Log.d(TAG, "addShoppingList: adding "+listName);
+        shoppingLists.add(new ShoppingList(listName));
+        adapter.notifyDataSetChanged();
+    }
 
     //-------------------------------------------------------------------list view management
     //setting up ListView, that will display contents of shoppingLists
@@ -54,7 +78,7 @@ public class ListsActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                 String clickedShoppingListName = shoppingLists.get(position).getName();
-                Log.d(LOG_TAG,"MainActivity: opening details activity for "+clickedShoppingListName);
+                Log.d(TAG,"MainActivity: opening details activity for "+clickedShoppingListName);
 
                 /*
                 //todo
@@ -68,30 +92,5 @@ public class ListsActivity extends AppCompatActivity {
         });
     }
 
-    //todo- this is just a schema for later to update
-    //update local shopping lists list with the list @param cityWeatherDataArrayList
-    //and notify observers of adapter, so that list view refreshes
-    /*private void updateShoppingListsListView(ArrayList<ShoppingList> shoppingLists){
-        this.shoppingLists = shoppingLists;
-
-        adapter.setData(shoppingLists);
-
-        adapter.notifyDataSetChanged();
-        listView.invalidateViews();
-    }*/
-
-//todo - it is a template for removing elements from list view
-    private void doRemoveCity(final String cityToBeRemoved) {
-        /*if(weatherService !=null){
-            weatherService.removeCity(cityToBeRemoved);
-            //and update the list view
-            updateCitiesWeatherListView(
-                    (ArrayList<CityWeatherData>)weatherService.getAllCitiesWeather());
-
-        }else{
-            cityNameToBeRemoved = cityToBeRemoved;
-        }*/
-
-    }
     //--------------------------------------------------end of list management
 }

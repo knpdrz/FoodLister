@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">ShopLister</string>
+    <string name="newListNamePlaceholder">shopping list name</string>
 </resources>
