@@ -1,5 +1,6 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,11 +9,14 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_DETAILS_REQ_CODE;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
 
 public class ListsActivity extends AppCompatActivity {
@@ -23,6 +27,7 @@ public class ListsActivity extends AppCompatActivity {
 
     private EditText shoppingListEditText;
     private Button addShoppingListButton;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,12 +64,16 @@ public class ListsActivity extends AppCompatActivity {
 
         //setting up the list view of shopping list
         prepareListView();
+
+
     }
 
     private void addShoppingList(String listName){
         Log.d(TAG, "addShoppingList: adding "+listName);
         shoppingLists.add(new ShoppingList(listName));
         adapter.notifyDataSetChanged();
+
+        shoppingListEditText.getText().clear();
     }
 
     //-------------------------------------------------------------------list view management
@@ -80,14 +89,11 @@ public class ListsActivity extends AppCompatActivity {
                 String clickedShoppingListName = shoppingLists.get(position).getName();
                 Log.d(TAG,"MainActivity: opening details activity for "+clickedShoppingListName);
 
-                /*
-                //todo
                 Intent openListDetailsIntent =
-                        new Intent(getApplicationContext(), CityDetailsActivity.class);
-                openCityDetailsIntent.putExtra(CITY_NAME, clickedCityString);
-                openCityDetailsIntent.putExtra(CWD_OBJECT, cityWeatherData);
-                startActivityForResult(openCityDetailsIntent, CITY_DETAILS_REQ_CODE);
-*/
+                        new Intent(getApplicationContext(), ListDetailsActivity.class);
+                openListDetailsIntent.putExtra(LIST_NAME, clickedShoppingListName);
+                //openListDetailsIntent.putExtra(CWD_OBJECT, cityWeatherData);
+                startActivityForResult(openListDetailsIntent, LIST_DETAILS_REQ_CODE);
             }
         });
     }

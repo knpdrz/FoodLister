@@ -3,5 +3,5 @@
     <string name="newListNamePlaceholder">shopping list name</string>
     <string name="addFriendPlaceholder">find friend by email or username</string>
     <string name="addFriend">add friend</string>
-
+    <string name="share">share</string>
 </resources>
