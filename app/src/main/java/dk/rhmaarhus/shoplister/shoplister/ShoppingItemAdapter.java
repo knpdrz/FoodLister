@@ -1,6 +1,7 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,7 +52,7 @@ public class ShoppingItemAdapter extends BaseAdapter {
     }
 
     @Override
-    public View getView(int position, View view, ViewGroup viewGroup) {
+    public View getView(final int position, View view, ViewGroup viewGroup) {
         if(view == null){
             LayoutInflater demoInflater = (LayoutInflater)this.context
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -62,6 +63,20 @@ public class ShoppingItemAdapter extends BaseAdapter {
             setIngredientData(view);
         }
 
+        CheckBox boughtCheckBox = view.findViewById(R.id.boughtCheckBox);
+        final TextView shoppingItemTextView = view.findViewById(R.id.shoppingItemTextView);
+        boughtCheckBox.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v) {
+                ingredients.get(position).flipMarked();
+                if(ingredients.get(position).getMarked()) {
+                    shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+                }
+                else {
+                    shoppingItemTextView.setPaintFlags(0);
+                }
+            }
+        });
         return view;
     }
 
@@ -71,6 +86,7 @@ public class ShoppingItemAdapter extends BaseAdapter {
         CheckBox boughtCheckBox = view.findViewById(R.id.boughtCheckBox);
         if(boughtCheckBox.isChecked() != ingredient.getMarked()) {
             boughtCheckBox.toggle();
+            shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
         }
     }
 }

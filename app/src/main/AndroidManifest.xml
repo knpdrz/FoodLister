@@ -20,7 +20,6 @@
         </activity>
         <activity android:name=".ListDetailsActivity"></activity>
         <activity android:name=".ShareActivity" />
-        <activity android:name=".ListDetailsActivity" />
         <activity android:name=".AddShoppingItemActivity"></activity>
     </application>
 
