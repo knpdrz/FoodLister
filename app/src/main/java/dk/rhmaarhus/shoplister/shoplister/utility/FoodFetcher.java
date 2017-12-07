@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.gson.Gson;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,7 +21,7 @@ import dk.rhmaarhus.shoplister.shoplister.model.Food;
  * Created by rjkey on 30-11-2017.
  */
 
-public class FoodFetcher {
+public class FoodFetcher implements Subject {
 
     private String APIUrl = "https://spoonacular-recipe-food-nutrition-v1.p.mashape.com/food/ingredients/" +
             "autocomplete?&metaInformation=false&number=10&query=";
@@ -29,9 +30,11 @@ public class FoodFetcher {
     private String MashapeKeyValue = "58I2ZEiFNZmshHTQLPkiMoCuxEApp1v7qGQjsnjGYgsy8VzF5V"; //Header Value
     private String MashapeHostValue = "spoonacular-recipe-food-nutrition-v1.p.mashape.com"; //Header Value
     private RequestQueue queue;
+    private ArrayList<Observer> observers;
 
     public FoodFetcher(Context context){
         queue = Volley.newRequestQueue(context);
+        observers = new ArrayList<>();
     }
 
     public void GetFood(String food){
@@ -48,7 +51,7 @@ public class FoodFetcher {
                 Food[] food = ParseJsonToFood(response);
 
                 if (food != null){
-                    UpdateFoodList(food);
+                    notifyObserver(food);
                 }
                 else{
                     //SHIT! Food is null!!
@@ -72,13 +75,27 @@ public class FoodFetcher {
         queue.add(stringRequest);
     }
 
-    private void UpdateFoodList(Food[] food) {
-
-    }
-
     private Food[] ParseJsonToFood(String jsonString){
         Gson gson = new Gson();
         Food[] food = gson.fromJson(jsonString, Food[].class);
         return food;
+    }
+
+    @Override
+    public void register(Observer newObserver) {
+        observers.add(newObserver);
+    }
+
+    @Override
+    public void unregister(Observer deleteObserver) {
+        int observerIndex = observers.indexOf(deleteObserver);
+        observers.remove(observerIndex);
+    }
+
+    @Override
+    public void notifyObserver(Food[] foodList) {
+        for (Observer observer : observers){
+            observer.update(foodList);
+        }
     }
 }
