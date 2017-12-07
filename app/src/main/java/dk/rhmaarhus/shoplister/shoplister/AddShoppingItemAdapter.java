@@ -1,6 +1,7 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,6 +64,7 @@ public class AddShoppingItemAdapter extends BaseAdapter {
 
     private void setFoodData(View view, String food) {
         TextView listNameTextView =view.findViewById(R.id.foodTextView);
+        listNameTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
         listNameTextView.setText(food);
     }
 }
