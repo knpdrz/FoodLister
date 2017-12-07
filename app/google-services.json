@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "544725476985",
+    "firebase_url": "https://foodlister-44152.firebaseio.com",
+    "project_id": "foodlister-44152",
+    "storage_bucket": "foodlister-44152.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:544725476985:android:0bba583ca0b2f9d6",
+        "android_client_info": {
+          "package_name": "dk.rhmaarhus.shoplister.shoplister"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544725476985-s6o3g9lp1fbdlcl02u8bkm85fr8r2jqn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.rhmaarhus.shoplister.shoplister",
+            "certificate_hash": "14e8cba27e7474b903d61cf53740e54c0b352241"
+          }
+        },
+        {
+          "client_id": "544725476985-55bc12j3923fcdlbpvr0k6ksnfaurujd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAecfZALFwVXGHVoPHSsCFNUfWwwNDG5rs"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544725476985-55bc12j3923fcdlbpvr0k6ksnfaurujd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

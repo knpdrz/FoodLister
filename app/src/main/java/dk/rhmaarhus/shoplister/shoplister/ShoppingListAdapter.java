@@ -66,7 +66,7 @@ class ShoppingListAdapter extends BaseAdapter{
 
     private void setShoppingListData(View view){
         TextView listNameTextView = (TextView)view.findViewById(R.id.listNameTextView);
-        listNameTextView.setText(shoppingList.getName());
+        listNameTextView.setText(shoppingList.name);
 
     }
 }

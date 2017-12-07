@@ -13,6 +13,8 @@ public class ShoppingItem {
         marked = false;
     }
 
+    public ShoppingItem(){;}
+
     public String getName(){
         return name;
     }
@@ -21,4 +23,5 @@ public class ShoppingItem {
     }
     public void flipMarked() {this.marked = !this.marked;}
     public Boolean getMarked() {return this.marked;}
+    public void setMarked(boolean marked) {this.marked = marked;}
 }

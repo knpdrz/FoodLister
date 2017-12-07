@@ -9,9 +9,14 @@ import android.widget.BaseAdapter;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
 import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
+
+import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
 
 /**
  * Created by hulda on 30.11.2017.
@@ -21,10 +26,16 @@ public class ShoppingItemAdapter extends BaseAdapter {
     Context context;
     ArrayList<ShoppingItem> ingredients;
     ShoppingItem ingredient;
+    public String shoppingListID;
 
-    public ShoppingItemAdapter(Context c, ArrayList<ShoppingItem> ingredients){
+    private DatabaseReference shoppingItemDatabase;
+
+    public ShoppingItemAdapter(Context c, ArrayList<ShoppingItem> ingredients, String shoppingListID){
         this.context = c;
         this.ingredients = ingredients;
+        this.shoppingListID = shoppingListID;
+
+        shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
     }
 
     @Override
@@ -75,6 +86,7 @@ public class ShoppingItemAdapter extends BaseAdapter {
                 else {
                     shoppingItemTextView.setPaintFlags(0);
                 }
+                shoppingItemDatabase.child(ingredients.get(position).getName()).setValue(ingredients.get(position));
             }
         });
         return view;

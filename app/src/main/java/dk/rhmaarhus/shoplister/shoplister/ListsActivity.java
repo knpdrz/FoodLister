@@ -10,12 +10,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
+import com.google.firebase.database.ChildEventListener;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
+
 import java.util.ArrayList;
+import java.util.List;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_DETAILS_REQ_CODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
 
 public class ListsActivity extends AppCompatActivity {
@@ -27,11 +37,17 @@ public class ListsActivity extends AppCompatActivity {
     private EditText shoppingListEditText;
     private Button addShoppingListButton;
 
+    private DatabaseReference listsDatabase;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
+
+        // Write a message to the database
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        listsDatabase = FirebaseDatabase.getInstance().getReference(LIST_NODE);
 
         shoppingListEditText = findViewById(R.id.newListEditText);
 
@@ -48,17 +64,40 @@ public class ListsActivity extends AppCompatActivity {
             }
         });
 
+        ChildEventListener listListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                ShoppingList shopList = dataSnapshot.getValue(ShoppingList.class);
+                shoppingLists.add(shopList);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //?
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting Post failed, log a message
+                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        listsDatabase.addChildEventListener(listListener);
+
         //setting shopping lists list that will be displayed in the list view
         shoppingLists = new ArrayList<ShoppingList>();
-
-        //todo- temp only
-        //adding dummy data to shopping lists list
-        shoppingLists.add(new ShoppingList("MyList1"));
-        shoppingLists.add(new ShoppingList("MyList2"));
-        shoppingLists.add(new ShoppingList("MyList3"));
-        shoppingLists.add(new ShoppingList("Party list"));
-        shoppingLists.add(new ShoppingList("For kids"));
-
 
 
         //setting up the list view of shopping list
@@ -68,10 +107,11 @@ public class ListsActivity extends AppCompatActivity {
     }
 
     private void addShoppingList(String listName){
+        ShoppingList shopList = new ShoppingList(listName);
         Log.d(TAG, "addShoppingList: adding "+listName);
-        shoppingLists.add(new ShoppingList(listName));
-        adapter.notifyDataSetChanged();
 
+        shopList.setFirebaseKey(listsDatabase.push().getKey());
+        listsDatabase.child(shopList.getFirebaseKey()).setValue(shopList);
         shoppingListEditText.getText().clear();
     }
 
@@ -85,12 +125,12 @@ public class ListsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String clickedShoppingListName = shoppingLists.get(position).getName();
-                Log.d(TAG,"MainActivity: opening details activity for "+clickedShoppingListName);
+                String clickedShoppingListID = shoppingLists.get(position).getFirebaseKey();
+                Log.d(TAG,"MainActivity: opening details activity for "+clickedShoppingListID);
 
                 Intent openListDetailsIntent =
                         new Intent(getApplicationContext(), ListDetailsActivity.class);
-                openListDetailsIntent.putExtra(LIST_NAME, clickedShoppingListName);
+                openListDetailsIntent.putExtra(LIST_ID, clickedShoppingListID);
                 //openListDetailsIntent.putExtra(CWD_OBJECT, cityWeatherData);
                 startActivityForResult(openListDetailsIntent, LIST_DETAILS_REQ_CODE);
             }
