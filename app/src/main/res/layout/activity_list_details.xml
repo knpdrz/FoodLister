@@ -23,16 +23,17 @@
         />
 
     <Button
-        android:id="@+id/addIngredientButton"
+        android:id="@+id/addIngredientBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="@string/ingredient" />
+
     <Button
+        android:id="@+id/shareBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="@string/share"
-        android:id="@+id/shareButton"/>
+        android:text="@string/share" />
 </LinearLayout>
 

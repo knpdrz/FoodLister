@@ -1,5 +1,6 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -9,6 +10,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,9 +25,12 @@ import dk.rhmaarhus.shoplister.shoplister.utility.FoodFetcher;
 import dk.rhmaarhus.shoplister.shoplister.utility.Observer;
 import dk.rhmaarhus.shoplister.shoplister.utility.Subject;
 
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
+
 public class AddShoppingItemActivity extends AppCompatActivity implements Observer {
 
-    private Button searchBtn;
+    private Button searchBtn, saveItemsBtn, cancelItemsBtn;
     private ListView foodListView;
     private EditText searchField;
     private Subject foodSubject;
@@ -33,6 +40,8 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
     private ArrayList<String> listOfFoods;
     private ArrayList<ShoppingItem> itemToShoppingList;
     private Map<String, Boolean> hasBeenClicked;
+    private String shoppingListID;
+    private DatabaseReference shoppingItemDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +49,17 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         setContentView(R.layout.activity_add_shopping_item);
         foodFetcher = new FoodFetcher(this);
         searchBtn = findViewById(R.id.searchItemBtn);
+        saveItemsBtn = findViewById(R.id.saveItemsBtn);
+        cancelItemsBtn = findViewById(R.id.cancelItemsBtn);
         searchField = findViewById(R.id.findFoodText);
         listOfFoods = new ArrayList<String>();
         itemToShoppingList = new ArrayList<ShoppingItem>();
         hasBeenClicked = new HashMap<String, Boolean>();
+
+        Intent parentIntent = getIntent();
+        shoppingListID = parentIntent.getStringExtra(LIST_ID);
+
+        shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
 
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -54,6 +70,23 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
                 }
 
                 SearchForFood(food, foodFetcher);
+            }
+        });
+
+        saveItemsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+            for(Food food : foodList) {
+                shoppingItemDatabase.child(food.Name).setValue(new ShoppingItem(food.Name));
+            }
+            finish();
+            }
+        });
+
+        cancelItemsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                finish();
             }
         });
         foodList = new ArrayList<Food>();

@@ -35,7 +35,7 @@ public class ListsActivity extends AppCompatActivity {
     private ArrayList<ShoppingList> shoppingLists;
 
     private EditText shoppingListEditText;
-    private Button addShoppingListButton;
+    private Button addShoppingListBtn;
 
     private DatabaseReference listsDatabase;
 
@@ -51,8 +51,8 @@ public class ListsActivity extends AppCompatActivity {
 
         shoppingListEditText = findViewById(R.id.newListEditText);
 
-        addShoppingListButton = findViewById(R.id.addShoppingListButton);
-        addShoppingListButton.setOnClickListener(new View.OnClickListener() {
+        addShoppingListBtn = findViewById(R.id.addShoppingListBtn);
+        addShoppingListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //user wants to add a new shopping list
@@ -103,7 +103,6 @@ public class ListsActivity extends AppCompatActivity {
         //setting up the list view of shopping list
         prepareListView();
 
-
     }
 
     private void addShoppingList(String listName){
@@ -131,7 +130,6 @@ public class ListsActivity extends AppCompatActivity {
                 Intent openListDetailsIntent =
                         new Intent(getApplicationContext(), ListDetailsActivity.class);
                 openListDetailsIntent.putExtra(LIST_ID, clickedShoppingListID);
-                //openListDetailsIntent.putExtra(CWD_OBJECT, cityWeatherData);
                 startActivityForResult(openListDetailsIntent, LIST_DETAILS_REQ_CODE);
             }
         });

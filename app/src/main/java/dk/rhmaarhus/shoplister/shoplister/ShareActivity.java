@@ -20,7 +20,7 @@ public class ShareActivity extends AppCompatActivity {
     private ArrayList<User> users;
 
     private EditText findUserEditText;
-    private Button addUserButton;
+    private Button addUserBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +29,8 @@ public class ShareActivity extends AppCompatActivity {
 
         findUserEditText = findViewById(R.id.addUserEditText);
 
-        addUserButton = findViewById(R.id.addUserButton);
-        addUserButton.setOnClickListener(new View.OnClickListener() {
+        addUserBtn = findViewById(R.id.addUserBtn);
+        addUserBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //user wants to add a new friend

@@ -18,6 +18,7 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_DETAILS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
@@ -35,7 +36,7 @@ public class ListDetailsActivity extends AppCompatActivity {
     private String shoppingListID;
     private TextView shoppingListNameTextView;
 
-    private Button shareButton, addIngredientButton;
+    private Button shareBtn, addIngredientBtn;
 
     ArrayList<ShoppingItem> ingredientList;
 
@@ -47,8 +48,8 @@ public class ListDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_details);
 
-        shareButton = findViewById(R.id.shareButton);
-        addIngredientButton = findViewById(R.id.addIngredientButton);
+        shareBtn = findViewById(R.id.shareBtn);
+        addIngredientBtn = findViewById(R.id.addIngredientBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
         ingredientList = new ArrayList<ShoppingItem>();
 
@@ -127,7 +128,7 @@ public class ListDetailsActivity extends AppCompatActivity {
         };
         shoppingItemDatabase.addChildEventListener(shoppingItemListener);
 
-        shareButton.setOnClickListener(new View.OnClickListener() {
+        shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent openShareActivityIntent =
@@ -137,23 +138,18 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
         });
 
-        addIngredientButton.setOnClickListener(new View.OnClickListener() {
+        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                prepareIngredientsList();
+                //prepareIngredientsList();
+                Intent addShoppingItemIntent =
+                        new Intent(getApplicationContext(), AddShoppingItemActivity.class);
+                addShoppingItemIntent.putExtra(LIST_ID, shoppingListID);
+                startActivity(addShoppingItemIntent);
             }
         });
 
 
     }
 
-    private void prepareIngredientsList() {
-        shoppingItemDatabase.child("banana").setValue(new ShoppingItem("banana"));
-        shoppingItemDatabase.child("rice").setValue(new ShoppingItem("rice"));
-        shoppingItemDatabase.child("apple").setValue(new ShoppingItem("apple"));
-        ShoppingItem item = new ShoppingItem("pizza");
-        item.flipMarked();
-        shoppingItemDatabase.child("pizza").setValue(item);
-
-    }
 }

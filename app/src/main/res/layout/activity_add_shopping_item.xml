@@ -31,7 +31,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Search" />
+            android:text="@android:string/search_go" />
 
     </LinearLayout>
 
@@ -39,5 +39,30 @@
         android:id="@+id/searchFoodList"
         android:layout_width="wrap_content"
         android:layout_height="463dp" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_height="wrap_content"
+        android:layout_width="fill_parent"
+        android:orientation="horizontal"
+        >
+
+        <Button
+            android:id="@+id/cancelItemsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@android:string/cancel" />
+
+        <Button
+            android:id="@+id/saveItemsBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/save" />
+
+
+
+    </LinearLayout>
 
 </LinearLayout>
