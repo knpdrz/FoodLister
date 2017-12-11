@@ -76,8 +76,8 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         saveItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            for(Food food : foodList) {
-                shoppingItemDatabase.child(food.Name).setValue(new ShoppingItem(food.Name));
+            for(ShoppingItem shoppingItem : itemToShoppingList) {
+                shoppingItemDatabase.child(shoppingItem.getName()).setValue(new ShoppingItem(shoppingItem.getName()));
             }
             finish();
             }

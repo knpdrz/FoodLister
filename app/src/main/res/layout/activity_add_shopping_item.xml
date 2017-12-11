@@ -38,7 +38,7 @@
     <ListView
         android:id="@+id/searchFoodList"
         android:layout_width="wrap_content"
-        android:layout_height="463dp" />
+        android:layout_height="320dp" />
 
     <LinearLayout
         android:id="@+id/linearLayout3"
