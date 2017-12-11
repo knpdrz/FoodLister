@@ -4,12 +4,13 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
 import java.util.ArrayList;
+
+import dk.rhmaarhus.shoplister.shoplister.model.User;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
 
@@ -43,11 +44,11 @@ public class ShareActivity extends AppCompatActivity {
 
         //todo- temp only
         //adding dummy data to users list
-        users.add(new User("Angelo"));
+       /* users.add(new User("Angelo"));
         users.add(new User("Frank"));
         users.add(new User("Toby"));
         users.add(new User("Michael"));
-
+*/
 
         //setting up the list view of users (friends)
         prepareListView();
@@ -61,9 +62,10 @@ public class ShareActivity extends AppCompatActivity {
 
     //adds user to list view
     private void addUserToListView(String userName){
-        Log.d(TAG, "addUserToListView: adding "+userName);
-        users.add(new User(userName));
-        adapter.notifyDataSetChanged();
+        Log.d(TAG, "addUserToListView: adding  NOONE NOW COMMENTED"+userName);
+        //TOdo
+        /*users.add(new User(userName));
+        adapter.notifyDataSetChanged();*/
     }
 
     //-------------------------------------------------------------------list view management

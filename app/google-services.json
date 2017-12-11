@@ -15,6 +15,22 @@
       },
       "oauth_client": [
         {
+          "client_id": "544725476985-dgq6rhs62gfhlnj6pn9vmt4ot9se5885.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.rhmaarhus.shoplister.shoplister",
+            "certificate_hash": "7a853ea5b28ef7e2ba49ee5e3f5903d767d75b78"
+          }
+        },
+        {
+          "client_id": "544725476985-0jadlhfg0dvu8fpk7k59d2r2s00ra2se.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "dk.rhmaarhus.shoplister.shoplister",
+            "certificate_hash": "bb9a63ff15d3316f1e6cee6858f516782c125bb7"
+          }
+        },
+        {
           "client_id": "544725476985-s6o3g9lp1fbdlcl02u8bkm85fr8r2jqn.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
