@@ -74,6 +74,7 @@ public class ListsActivity extends AppCompatActivity {
         listsDatabase = FirebaseDatabase.getInstance().getReference(LIST_NODE);
 
 
+
         shoppingListEditText = findViewById(R.id.newListEditText);
 
         addShoppingListBtn = findViewById(R.id.addShoppingListBtn);
@@ -98,37 +99,7 @@ public class ListsActivity extends AppCompatActivity {
             }
         });
 
-        ChildEventListener listListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                ShoppingList shopList = dataSnapshot.getValue(ShoppingList.class);
-                shoppingLists.add(shopList);
-                adapter.notifyDataSetChanged();
-            }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //?
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        listsDatabase.addChildEventListener(listListener);
 
         //setting shopping lists list that will be displayed in the list view
         shoppingLists = new ArrayList<ShoppingList>();
@@ -184,9 +155,9 @@ public class ListsActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(this, "user logged in! name = " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
+                //enabling the reading of lists (to which user has access to)
+                addListsListener();
 
-
-                //
 
             } else {
                 // Sign in failed, check response for error code
@@ -196,4 +167,44 @@ public class ListsActivity extends AppCompatActivity {
             }
         }
     }
+
+    //call this function to attach a listener to Firebase database
+    //that will listen to changes in lists node
+    private void addListsListener(){
+        ChildEventListener listListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                ShoppingList shopList = dataSnapshot.getValue(ShoppingList.class);
+                shoppingLists.add(shopList);
+                adapter.notifyDataSetChanged();
+                Log.d(TAG, "onChildAdded: list added to lists list!");
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //?
+                Log.d(TAG, "onChildChanged: list list changed!");
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting lists failed, log a message
+                Log.w(TAG, "load lists:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        listsDatabase.addChildEventListener(listListener);
+    }
+
+
 }
