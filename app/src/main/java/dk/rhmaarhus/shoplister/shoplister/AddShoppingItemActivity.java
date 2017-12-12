@@ -128,8 +128,6 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
     @Override
     protected void onStart() {
         super.onStart();
-
-
     }
 
     private void SearchForFood(String food, FoodFetcher subject) {

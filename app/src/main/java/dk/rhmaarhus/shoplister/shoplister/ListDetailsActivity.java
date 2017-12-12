@@ -1,8 +1,8 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,15 +18,14 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_DETAILS_REQ_CODE;
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
+
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
-
-import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
-import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
 public class ListDetailsActivity extends AppCompatActivity {
 
@@ -42,6 +41,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
     private DatabaseReference shoppingItemDatabase;
     private DatabaseReference listsDatabase;
+    private DatabaseReference nameOfList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +59,8 @@ public class ListDetailsActivity extends AppCompatActivity {
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
         listsDatabase = FirebaseDatabase.getInstance().getReference(LIST_NODE);
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
+        //nameOfList = FirebaseDatabase.getInstance().getReference("lists" + "/" + shoppingListID);
+
 
         ValueEventListener listListener = new ValueEventListener() {
             @Override
