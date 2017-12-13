@@ -37,6 +37,13 @@
         android:text="@string/share" />
 
     <Button
+        android:id="@+id/clearBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="@string/clear" />
+
+    <Button
         android:id="@+id/chatBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

@@ -1,12 +1,14 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -16,7 +18,6 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
@@ -24,13 +25,13 @@ import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_MEMBERS_NODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_REQ_CODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHARE_SCREEN_REQ_CODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
 
 public class ListDetailsActivity extends AppCompatActivity {
 
@@ -42,7 +43,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
     private TextView shoppingListNameTextView;
 
-    private Button shareBtn, addIngredientBtn;
+    private Button shareBtn, addIngredientBtn, clearBtn;
 
     ArrayList<ShoppingItem> ingredientList;
     ArrayList<User> friendsList;
@@ -61,6 +62,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
         shareBtn = findViewById(R.id.shareBtn);
         addIngredientBtn = findViewById(R.id.addIngredientBtn);
+        clearBtn = findViewById(R.id.clearBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
 
         ingredientList = new ArrayList<ShoppingItem>();
@@ -73,9 +75,8 @@ public class ListDetailsActivity extends AppCompatActivity {
 
         shoppingListNameTextView.setText(shoppingListName);
 
-        shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList, shoppingListID);
-        shoppingItemListView = findViewById(R.id.shoppingItemListView);
-        shoppingItemListView.setAdapter(shoppingItemAdapter);
+        //Preparing the list view
+        prepareList();
 
         //get reference to firebase database with shopping list items
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
@@ -108,7 +109,34 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
         });
 
+        clearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(ShoppingItem shoppingItem : ingredientList) {
+                    if(shoppingItem.getMarked()) {
+                        shoppingItemDatabase.child(shoppingItem.getName()).removeValue();
+                    }
+                }
+            }
+        });
+    }
 
+    private void prepareList() {
+        shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList, shoppingListID);
+        shoppingItemListView = findViewById(R.id.shoppingItemListView);
+        shoppingItemListView.setAdapter(shoppingItemAdapter);
+
+        shoppingItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Log.d(TAG,"Details activity, marking " + ingredientList.get(position).getName());
+
+                ingredientList.get(position).flipMarked();
+
+                shoppingItemDatabase.child(ingredientList.get(position).getName()).setValue(ingredientList.get(position));
+            }
+        });
     }
 
     private void prepareRecyclerView(){

@@ -1,4 +1,4 @@
-package dk.rhmaarhus.shoplister.shoplister;
+package dk.rhmaarhus.shoplister.shoplister.utility;
 
 /**
  * Created by Moon on 30.11.2017.

@@ -12,7 +12,7 @@ import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
 
 public class ShareActivity extends AppCompatActivity {
     private UsersAdapter adapter;

@@ -28,12 +28,12 @@ import java.util.List;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_DETAILS_REQ_CODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.USERS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_REQ_CODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_NODE;
 
 public class ListsActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -63,6 +63,8 @@ public class ListsActivity extends AppCompatActivity {
                 AuthUI.getInstance()
                         .createSignInIntentBuilder()
                         .setAvailableProviders(providers)
+                        //todo     not working the logo
+                        .setLogo(R.mipmap.ic_launcher)
                         .build(),
                 RC_SIGN_IN);
 

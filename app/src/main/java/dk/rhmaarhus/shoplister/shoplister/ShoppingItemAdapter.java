@@ -1,6 +1,8 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,7 +18,7 @@ import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
 
 /**
  * Created by hulda on 30.11.2017.
@@ -74,31 +76,25 @@ public class ShoppingItemAdapter extends BaseAdapter {
             setIngredientData(view);
         }
 
-        CheckBox boughtCheckBox = view.findViewById(R.id.boughtCheckBox);
         final TextView shoppingItemTextView = view.findViewById(R.id.shoppingItemTextView);
-        boughtCheckBox.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                ingredients.get(position).flipMarked();
-                if(ingredients.get(position).getMarked()) {
-                    shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                }
-                else {
-                    shoppingItemTextView.setPaintFlags(0);
-                }
-                shoppingItemDatabase.child(ingredients.get(position).getName()).setValue(ingredients.get(position));
-            }
-        });
+
         return view;
     }
 
+    @SuppressLint("ResourceAsColor")
     private void setIngredientData(View view){
         TextView shoppingItemTextView = (TextView)view.findViewById(R.id.shoppingItemTextView);
         shoppingItemTextView.setText(ingredient.getName());
-        CheckBox boughtCheckBox = view.findViewById(R.id.boughtCheckBox);
-        if(boughtCheckBox.isChecked() != ingredient.getMarked()) {
-            boughtCheckBox.toggle();
+        if(ingredient.getMarked()) {
+            shoppingItemTextView.setPaintFlags(0);
             shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            shoppingItemTextView.setTextColor(R.color.colorPrimary);
+        }
+        else {
+            shoppingItemTextView.setPaintFlags(0);
+            shoppingItemTextView.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+            shoppingItemTextView.setTextColor(Color.BLACK);
+
         }
     }
 }
