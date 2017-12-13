@@ -18,6 +18,7 @@ public class Globals {
     //database references
     public static final String LIST_NODE = "lists";
     public static final String USERS_NODE = "users";
+    public static final String USER_INFO_NODE = "userInfo";
     public static final String LIST_MEMBERS_NODE = "listMembers";
     public static final String SHOPPING_ITEMS_NODE = "shoppingItems";
 
