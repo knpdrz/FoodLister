@@ -16,7 +16,7 @@ import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
 
 /**
  * Created by hulda on 30.11.2017.

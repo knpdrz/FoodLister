@@ -14,19 +14,16 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
-import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHARE_SCREEN_REQ_CODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
 
 public class ListDetailsActivity extends AppCompatActivity {
 
@@ -38,7 +35,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
     private TextView shoppingListNameTextView;
 
-    private Button shareBtn, addIngredientBtn;
+    private Button shareBtn, addIngredientBtn, clearBtn;
 
     ArrayList<ShoppingItem> ingredientList;
 
@@ -51,6 +48,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
         shareBtn = findViewById(R.id.shareBtn);
         addIngredientBtn = findViewById(R.id.addIngredientBtn);
+        clearBtn = findViewById(R.id.clearBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
         ingredientList = new ArrayList<ShoppingItem>();
 
@@ -90,7 +88,16 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
         });
 
-
+        clearBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for(ShoppingItem shoppingItem : ingredientList) {
+                    if(shoppingItem.getMarked()) {
+                        //todo delete from the database and then make sure that onChildDeleted is implemented too
+                    }
+                }
+            }
+        });
     }
 
     private void addShoppingItemsListener(){

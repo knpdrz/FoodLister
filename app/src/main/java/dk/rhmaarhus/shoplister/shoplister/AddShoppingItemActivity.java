@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,16 +19,14 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
-
 import dk.rhmaarhus.shoplister.shoplister.model.Food;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.utility.FoodFetcher;
 import dk.rhmaarhus.shoplister.shoplister.utility.Observer;
 import dk.rhmaarhus.shoplister.shoplister.utility.Subject;
 
-import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
-import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
 
 public class AddShoppingItemActivity extends AppCompatActivity implements Observer {
 
