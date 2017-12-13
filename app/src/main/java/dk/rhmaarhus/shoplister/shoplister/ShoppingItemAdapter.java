@@ -74,31 +74,19 @@ public class ShoppingItemAdapter extends BaseAdapter {
             setIngredientData(view);
         }
 
-        CheckBox boughtCheckBox = view.findViewById(R.id.boughtCheckBox);
         final TextView shoppingItemTextView = view.findViewById(R.id.shoppingItemTextView);
-        boughtCheckBox.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                ingredients.get(position).flipMarked();
-                if(ingredients.get(position).getMarked()) {
-                    shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
-                }
-                else {
-                    shoppingItemTextView.setPaintFlags(0);
-                }
-                shoppingItemDatabase.child(ingredients.get(position).getName()).setValue(ingredients.get(position));
-            }
-        });
+
         return view;
     }
 
     private void setIngredientData(View view){
         TextView shoppingItemTextView = (TextView)view.findViewById(R.id.shoppingItemTextView);
         shoppingItemTextView.setText(ingredient.getName());
-        CheckBox boughtCheckBox = view.findViewById(R.id.boughtCheckBox);
-        if(boughtCheckBox.isChecked() != ingredient.getMarked()) {
-            boughtCheckBox.toggle();
+        if(ingredient.getMarked()) {
             shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+        }
+        else {
+            shoppingItemTextView.setPaintFlags(0);
         }
     }
 }

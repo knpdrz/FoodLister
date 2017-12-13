@@ -1,10 +1,12 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
+import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -18,7 +20,9 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHARE_SCREEN_REQ_CODE;
@@ -59,9 +63,8 @@ public class ListDetailsActivity extends AppCompatActivity {
 
         shoppingListNameTextView.setText(shoppingListName);
 
-        shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList, shoppingListID);
-        shoppingItemListView = findViewById(R.id.shoppingItemListView);
-        shoppingItemListView.setAdapter(shoppingItemAdapter);
+        //Preparing the list view
+        prepareList();
 
         //get reference to firebase database with shopping list items
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
@@ -93,9 +96,27 @@ public class ListDetailsActivity extends AppCompatActivity {
             public void onClick(View view) {
                 for(ShoppingItem shoppingItem : ingredientList) {
                     if(shoppingItem.getMarked()) {
-                        //todo delete from the database and then make sure that onChildDeleted is implemented too
+                        shoppingItemDatabase.child(shoppingItem.getName()).removeValue();
                     }
                 }
+            }
+        });
+    }
+
+    private void prepareList() {
+        shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList, shoppingListID);
+        shoppingItemListView = findViewById(R.id.shoppingItemListView);
+        shoppingItemListView.setAdapter(shoppingItemAdapter);
+
+        shoppingItemListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+
+                Log.d(TAG,"Details activity, marking " + ingredientList.get(position).getName());
+
+                ingredientList.get(position).flipMarked();
+
+                shoppingItemDatabase.child(ingredientList.get(position).getName()).setValue(ingredientList.get(position));
             }
         });
     }
