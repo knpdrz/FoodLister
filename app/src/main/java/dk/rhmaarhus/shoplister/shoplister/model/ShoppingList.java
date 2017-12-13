@@ -10,16 +10,14 @@ import java.util.Map;
  */
 
 public class ShoppingList {
-    public String name;
-    private Map<String, User> members;
+    private String name;
     private String firebaseKey;
 
     public ShoppingList(){}
 
     public ShoppingList(String name, User user){
         this.name = name;
-        this.members = new HashMap<String,User>();
-        members.put(user.getUid(),user);
+
     }
 
     public String getFirebaseKey() {
@@ -30,8 +28,12 @@ public class ShoppingList {
         this.firebaseKey = firebaseKey;
     }
 
-
-    public Map<String, User> getMembers() {
-        return members;
+    public void setName(){
+        this.name = name;
     }
+
+    public String getName(){
+        return name;
+    }
+
 }

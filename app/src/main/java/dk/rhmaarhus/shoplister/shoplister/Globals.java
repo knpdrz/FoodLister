@@ -14,4 +14,6 @@ public class Globals {
 
     public static final String SHOPPING_ITEMS_NODE = "shoppingItems";
 
+    public static final String LIST_NAME="listName";
+
 }

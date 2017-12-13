@@ -22,6 +22,7 @@ import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHOPPING_ITEMS_NODE;
@@ -33,6 +34,8 @@ public class ListDetailsActivity extends AppCompatActivity {
     private ListView shoppingItemListView;
 
     private String shoppingListID;
+    private String shoppingListName;
+
     private TextView shoppingListNameTextView;
 
     private Button shareBtn, addIngredientBtn;
@@ -40,8 +43,6 @@ public class ListDetailsActivity extends AppCompatActivity {
     ArrayList<ShoppingItem> ingredientList;
 
     private DatabaseReference shoppingItemDatabase;
-    private DatabaseReference listsDatabase;
-    private DatabaseReference nameOfList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,36 +54,46 @@ public class ListDetailsActivity extends AppCompatActivity {
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
         ingredientList = new ArrayList<ShoppingItem>();
 
+        //getting list details from main activity (ListsActivity)
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
+        shoppingListName = parentIntent.getStringExtra(LIST_NAME);
 
-        shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
-        listsDatabase = FirebaseDatabase.getInstance().getReference(LIST_NODE);
-        shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
-        //nameOfList = FirebaseDatabase.getInstance().getReference("lists" + "/" + shoppingListID);
-
-
-        ValueEventListener listListener = new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                // Get Post object and use the values to update the UI
-                String name = dataSnapshot.getValue(ShoppingList.class).name;
-                shoppingListNameTextView.setText(name);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        listsDatabase.addValueEventListener(listListener);
+        shoppingListNameTextView.setText(shoppingListName);
 
         shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList, shoppingListID);
         shoppingItemListView = findViewById(R.id.shoppingItemListView);
         shoppingItemListView.setAdapter(shoppingItemAdapter);
 
+        //get reference to firebase database with shopping list items
+        shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
+        addShoppingItemsListener();
+
+        shareBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openShareActivityIntent =
+                        new Intent(getApplicationContext(), ShareActivity.class);
+                openShareActivityIntent.putExtra(LIST_ID, shoppingListID);
+                startActivityForResult(openShareActivityIntent, SHARE_SCREEN_REQ_CODE);
+            }
+        });
+
+        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //prepareIngredientsList();
+                Intent addShoppingItemIntent =
+                        new Intent(getApplicationContext(), AddShoppingItemActivity.class);
+                addShoppingItemIntent.putExtra(LIST_ID, shoppingListID);
+                startActivity(addShoppingItemIntent);
+            }
+        });
+
+
+    }
+
+    private void addShoppingItemsListener(){
         ChildEventListener shoppingItemListener = new ChildEventListener() {
 
             @Override
@@ -90,6 +101,7 @@ public class ListDetailsActivity extends AppCompatActivity {
                 ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
                 ingredientList.add(item);
                 shoppingItemAdapter.notifyDataSetChanged();
+                Log.d(TAG, "onChildAdded: adding list item: " + item.getName());
             }
 
             @Override
@@ -123,34 +135,12 @@ public class ListDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                // Getting Post failed, log a message
-                Log.w(TAG, "loadPost:onCancelled", databaseError.toException());
+                // Getting shopping items failed, log a message
+                Log.w(TAG, "load item:onCancelled", databaseError.toException());
                 // ...
             }
         };
         shoppingItemDatabase.addChildEventListener(shoppingItemListener);
-
-        shareBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent openShareActivityIntent =
-                        new Intent(getApplicationContext(), ShareActivity.class);
-                openShareActivityIntent.putExtra(LIST_ID, shoppingListID);
-                startActivityForResult(openShareActivityIntent, SHARE_SCREEN_REQ_CODE);
-            }
-        });
-
-        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //prepareIngredientsList();
-                Intent addShoppingItemIntent =
-                        new Intent(getApplicationContext(), AddShoppingItemActivity.class);
-                addShoppingItemIntent.putExtra(LIST_ID, shoppingListID);
-                startActivity(addShoppingItemIntent);
-            }
-        });
-
 
     }
 

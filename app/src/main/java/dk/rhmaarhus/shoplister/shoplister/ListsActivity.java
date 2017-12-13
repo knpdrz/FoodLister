@@ -30,8 +30,10 @@ import dk.rhmaarhus.shoplister.shoplister.model.User;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_DETAILS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.USERS_NODE;
 
 public class ListsActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -44,7 +46,7 @@ public class ListsActivity extends AppCompatActivity {
     private EditText shoppingListEditText;
     private Button addShoppingListBtn;
 
-    private DatabaseReference listsDatabase;
+    private DatabaseReference userListsDatabase;
 
 
     @Override
@@ -63,11 +65,6 @@ public class ListsActivity extends AppCompatActivity {
                         .setAvailableProviders(providers)
                         .build(),
                 RC_SIGN_IN);
-
-
-        // Write a message to the database
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        listsDatabase = FirebaseDatabase.getInstance().getReference(LIST_NODE);
 
 
 
@@ -96,7 +93,6 @@ public class ListsActivity extends AppCompatActivity {
         });
 
 
-
         //setting shopping lists list that will be displayed in the list view
         shoppingLists = new ArrayList<ShoppingList>();
 
@@ -105,15 +101,14 @@ public class ListsActivity extends AppCompatActivity {
         prepareListView();
 
 
-
     }
 
     private void addShoppingList(String listName, User user){
         ShoppingList shopList = new ShoppingList(listName, user);
         Log.d(TAG, "addShoppingList: adding "+listName + " owned by " + user.getName());
 
-        shopList.setFirebaseKey(listsDatabase.push().getKey());
-        listsDatabase.child(shopList.getFirebaseKey()).setValue(shopList);
+        shopList.setFirebaseKey(userListsDatabase.push().getKey());
+        userListsDatabase.child(shopList.getFirebaseKey()).setValue(shopList);
         shoppingListEditText.getText().clear();
     }
 
@@ -127,12 +122,15 @@ public class ListsActivity extends AppCompatActivity {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                String clickedShoppingListID = shoppingLists.get(position).getFirebaseKey();
-                Log.d(TAG,"MainActivity: opening details activity for "+clickedShoppingListID);
+                ShoppingList clickedShoppingList = shoppingLists.get(position);
+
+
+                Log.d(TAG,"MainActivity: opening details activity for "+clickedShoppingList.getName());
 
                 Intent openListDetailsIntent =
                         new Intent(getApplicationContext(), ListDetailsActivity.class);
-                openListDetailsIntent.putExtra(LIST_ID, clickedShoppingListID);
+                openListDetailsIntent.putExtra(LIST_ID, clickedShoppingList.getFirebaseKey());
+                openListDetailsIntent.putExtra(LIST_NAME, clickedShoppingList.getName());
                 startActivityForResult(openListDetailsIntent, LIST_DETAILS_REQ_CODE);
             }
         });
@@ -151,8 +149,8 @@ public class ListsActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(this, "user logged in! name = " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
-                //enabling the reading of lists (to which user has access to)
-                addListsListener();
+                onLogin();
+
 
 
             } else {
@@ -162,6 +160,17 @@ public class ListsActivity extends AppCompatActivity {
 
             }
         }
+    }
+
+    private void onLogin(){
+        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+
+        //get reference to firebase database
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_NODE+"/"+currentUser.getUid()+"/"+LIST_NODE);
+
+        //enabling the reading of lists (to which user has access to)
+        addListsListener();
     }
 
     //call this function to attach a listener to Firebase database
@@ -178,8 +187,9 @@ public class ListsActivity extends AppCompatActivity {
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                //?
-                Log.d(TAG, "onChildChanged: list list changed!");
+                Log.d(TAG, "onChildChanged: not handled yet");
+                //todo
+
             }
 
             @Override
@@ -199,7 +209,7 @@ public class ListsActivity extends AppCompatActivity {
                 // ...
             }
         };
-        listsDatabase.addChildEventListener(listListener);
+        userListsDatabase.addChildEventListener(listListener);
     }
 
 

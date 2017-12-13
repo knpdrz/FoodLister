@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -18,6 +19,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+
+import static dk.rhmaarhus.shoplister.shoplister.Globals.TAG;
 
 import dk.rhmaarhus.shoplister.shoplister.model.Food;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
@@ -56,6 +59,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         itemToShoppingList = new ArrayList<ShoppingItem>();
         hasBeenClicked = new HashMap<String, Boolean>();
 
+        //get data from previous activity (list id)
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
 
@@ -69,17 +73,16 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
                     return;
                 }
 
-                SearchForFood(food, foodFetcher);
+                searchForFood(food, foodFetcher);
             }
         });
 
         saveItemsBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-            for(ShoppingItem shoppingItem : itemToShoppingList) {
-                shoppingItemDatabase.child(shoppingItem.getName()).setValue(new ShoppingItem(shoppingItem.getName()));
-            }
-            finish();
+                saveSelectedItems();
+
+                finish();
             }
         });
 
@@ -98,7 +101,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
                 TextView listNameTextView = view.findViewById(R.id.foodTextView);
                 String name = listNameTextView.getText().toString();
 
-                Click(name, listNameTextView);
+                click(name, listNameTextView);
 
                 ShoppingItem item = new ShoppingItem(name);
                 itemToShoppingList.add(item);
@@ -107,7 +110,14 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         });
     }
 
-    private void Click(String name, TextView listNameTextView) {
+    //saving selected items to the database
+    private void saveSelectedItems() {
+        for(ShoppingItem shoppingItem : itemToShoppingList) {
+            shoppingItemDatabase.child(shoppingItem.getName()).setValue(new ShoppingItem(shoppingItem.getName()));
+        }
+    }
+
+    private void click(String name, TextView listNameTextView) {
         Boolean value = hasBeenClicked.get(name);
         if (value){
             hasBeenClicked.put(name, false);
@@ -125,12 +135,8 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
-    private void SearchForFood(String food, FoodFetcher subject) {
+    private void searchForFood(String food, FoodFetcher subject) {
         this.foodSubject = subject;
         foodSubject.register(this);
         foodFetcher.GetFood(food);
