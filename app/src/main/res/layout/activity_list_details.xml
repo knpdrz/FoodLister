@@ -19,7 +19,7 @@
     <ListView
         android:id="@+id/shoppingItemListView"
         android:layout_width="wrap_content"
-        android:layout_height="350dp"
+        android:layout_height="300dp"
         />
 
     <Button
@@ -42,5 +42,22 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Chat" />
+
+    <!--thanks to https://stackoverflow.com/questions/30007956/how-to-center-items-of-a-recyclerview-->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="@color/colorAccent"
+        >
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/friendsRecyclerView"
+            android:scrollbars="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+            />
+    </LinearLayout>
+
 </LinearLayout>
 

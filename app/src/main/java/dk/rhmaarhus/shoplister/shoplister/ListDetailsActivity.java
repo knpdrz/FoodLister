@@ -3,6 +3,8 @@ package dk.rhmaarhus.shoplister.shoplister;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -20,8 +22,10 @@ import java.util.ArrayList;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
+import dk.rhmaarhus.shoplister.shoplister.model.User;
 
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_MEMBERS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.Globals.SHARE_SCREEN_REQ_CODE;
@@ -41,8 +45,14 @@ public class ListDetailsActivity extends AppCompatActivity {
     private Button shareBtn, addIngredientBtn;
 
     ArrayList<ShoppingItem> ingredientList;
+    ArrayList<User> friendsList;
 
     private DatabaseReference shoppingItemDatabase;
+    private DatabaseReference friendsDatabase;
+
+    private RecyclerView recyclerView;
+    private RecyclerView.Adapter friendsAdapter;
+    private RecyclerView.LayoutManager layoutManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,7 +62,9 @@ public class ListDetailsActivity extends AppCompatActivity {
         shareBtn = findViewById(R.id.shareBtn);
         addIngredientBtn = findViewById(R.id.addIngredientBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
+
         ingredientList = new ArrayList<ShoppingItem>();
+        friendsList = new ArrayList<User>();
 
         //getting list details from main activity (ListsActivity)
         Intent parentIntent = getIntent();
@@ -68,6 +80,12 @@ public class ListDetailsActivity extends AppCompatActivity {
         //get reference to firebase database with shopping list items
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
         addShoppingItemsListener();
+
+
+        //and reference to people who share this particular list
+        friendsDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID);
+        addFriendsListener();
+        prepareRecyclerView();
 
         shareBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -90,6 +108,22 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    private void prepareRecyclerView(){
+        //set recycler view for scrollable friends list
+        //based on https://developer.android.com/training/material/lists-cards.html
+        recyclerView = (RecyclerView) findViewById(R.id.friendsRecyclerView);
+        recyclerView.setHasFixedSize(true);
+        // use a linear layout manager
+        layoutManager = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
+
+        recyclerView.setLayoutManager(layoutManager);
+
+        // specifying an adapter
+        friendsAdapter = new FriendsAdapter(friendsList);
+        recyclerView.setAdapter(friendsAdapter);
 
     }
 
@@ -141,6 +175,59 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
         };
         shoppingItemDatabase.addChildEventListener(shoppingItemListener);
+
+    }
+
+    private void addFriendsListener(){
+        ChildEventListener friendsListener = new ChildEventListener() {
+
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                User item = dataSnapshot.getValue(User.class);
+                friendsList.add(item);
+
+                //todo does it work?
+                friendsAdapter.notifyDataSetChanged();
+                Log.d(TAG, "onChildAdded: adding friend " + item.getName());
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                User item = dataSnapshot.getValue(User.class);
+                for(int i = 0; i < friendsList.size(); i++ ) {
+                    if(friendsList.get(i).getName().equals(item.getName())) {
+                        friendsList.set(i, item);
+                        break;
+                    }
+                }
+                friendsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                User item = dataSnapshot.getValue(User.class);
+                for(int i = 0; i < friendsList.size(); i++ ) {
+                    if(friendsList.get(i).getName().equals(item.getName())) {
+                        friendsList.remove(i);
+                        break;
+                    }
+                }
+                friendsAdapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting friends failed, log a message
+                Log.w(TAG, "load friend:onCancelled", databaseError.toException());
+                // ...
+            }
+        };
+        friendsDatabase.addChildEventListener(friendsListener);
 
     }
 

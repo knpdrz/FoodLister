@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--based on http://tech.umanlife.com/2017/03/06/implement-an-horizontal-listview.html-->
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/relativeLayoutView"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    >
+    <LinearLayout
+        android:id="@+id/linearView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginRight="10dp"
+        android:layout_marginLeft="10dp"
+        >
+        <TextView android:id="@+id/friendNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="20dp"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="8dp"
+            android:textSize="15sp"
+            />
+        <ImageView android:id="@+id/friendImageView"
+            android:layout_width="40dp"
+            android:layout_height="45dp"
+            android:layout_below="@id/friendNameTextView"
+            android:layout_gravity="center_horizontal"/>
+    </LinearLayout>
+</RelativeLayout>
