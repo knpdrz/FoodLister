@@ -1,6 +1,8 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,14 +81,20 @@ public class ShoppingItemAdapter extends BaseAdapter {
         return view;
     }
 
+    @SuppressLint("ResourceAsColor")
     private void setIngredientData(View view){
         TextView shoppingItemTextView = (TextView)view.findViewById(R.id.shoppingItemTextView);
         shoppingItemTextView.setText(ingredient.getName());
         if(ingredient.getMarked()) {
+            shoppingItemTextView.setPaintFlags(0);
             shoppingItemTextView.setPaintFlags(Paint.STRIKE_THRU_TEXT_FLAG);
+            shoppingItemTextView.setTextColor(R.color.colorPrimary);
         }
         else {
             shoppingItemTextView.setPaintFlags(0);
+            shoppingItemTextView.setPaintFlags(Paint.FAKE_BOLD_TEXT_FLAG);
+            shoppingItemTextView.setTextColor(Color.BLACK);
+
         }
     }
 }
