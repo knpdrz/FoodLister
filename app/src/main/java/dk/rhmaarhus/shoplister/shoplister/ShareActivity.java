@@ -3,6 +3,7 @@ package dk.rhmaarhus.shoplister.shoplister;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -16,6 +17,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.Query;
 
 import java.util.ArrayList;
 
@@ -23,6 +25,7 @@ import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.EMAIL_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
@@ -39,10 +42,14 @@ public class ShareActivity extends AppCompatActivity {
     private ArrayList<String> membersIdsList;
 
     private EditText findUserEditText;
-    private Button addUserBtn;
+    private Button addUserButton;
 
     private DatabaseReference usersInfoDatabase;
     private DatabaseReference listMembersDatabase;
+
+    private ChildEventListener lastUsersInfoListener;
+
+    private Query emailQuery;
 
     private String shoppingListID;
     private String shoppingListName;
@@ -52,14 +59,20 @@ public class ShareActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
-        findUserEditText = findViewById(R.id.addUserEditText);
+        findUserEditText = findViewById(R.id.searchForUserEditText);
 
-        addUserBtn = findViewById(R.id.addUserBtn);
-        addUserBtn.setOnClickListener(new View.OnClickListener() {
+        addUserButton = findViewById(R.id.searchForUserButton);
+        addUserButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //user wants to add a new friend
-                findAndAddUser(findUserEditText.getText().toString());
+                //user wants search for a new friend to share the list with (by email)
+                users.clear();
+                adapter.notifyDataSetChanged();
+                Log.d(TAG, "----all users should be cleared now, searching for " + findUserEditText.getText().toString());
+                if(lastUsersInfoListener != null){
+                    emailQuery.removeEventListener(lastUsersInfoListener);
+                }
+                prepareQueriedUsersDataset(findUserEditText.getText().toString());
             }
         });
 
@@ -79,9 +92,20 @@ public class ShareActivity extends AppCompatActivity {
         listMembersDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID);
         addMembersListener();
 
-
         //setting up the list view of users (friends)
         prepareListView();
+    }
+
+    //function gets called after user clicks 'search for users' button
+    //it gets users whose emails start with 'emailToSearchFor'
+    private void prepareQueriedUsersDataset(String emailToSearchFor) {
+        usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
+        emailQuery = usersInfoDatabase
+                .orderByChild(EMAIL_NODE)
+                .startAt(emailToSearchFor)
+                .endAt(emailToSearchFor+"\uf8ff");
+
+        addQueriedUsersInfoListener();
     }
 
     //called by list adapter, when user clicked 'share' button of a particular user
@@ -102,41 +126,19 @@ public class ShareActivity extends AppCompatActivity {
 
     }
 
-    //todo this is going to be searching for user in our db
-    private void findAndAddUser(String userName){
-        addUserToListView(userName);
-    }
-
-    //-------------------------------------------------------------------list view management
-    //adds user to list view
-    private void addUserToListView(String userName){
-        Log.d(TAG, "addUserToListView: adding  NOONE NOW COMMENTED"+userName);
-        //TOdo
-        /*users.add(new User(userName));
-        adapter.notifyDataSetChanged();*/
-    }
 
     //setting up ListView, that will display contents of users list
     private void prepareListView(){
-        prepareUsersDataset();
-
         adapter = new UsersAdapter(this, users);
         listView = (ListView)findViewById(R.id.shareListView);
         listView.setAdapter(adapter);
-
-    }
-
-    //todo temporary solution
-    //gets all users from firebase and set them in users arraylist
-    private void prepareUsersDataset() {
-        usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
-        addUsersInfoListener();
     }
 
     //call this function to attach a listener to Firebase database
     //that will listen to changes in userInfo node
-    private void addUsersInfoListener(){
-        ChildEventListener usersInfoListener = new ChildEventListener() {
+    //of users whose email match the email query
+    private void addQueriedUsersInfoListener(){
+        lastUsersInfoListener = new ChildEventListener() {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
                 User user = dataSnapshot.getValue(User.class);
@@ -192,8 +194,10 @@ public class ShareActivity extends AppCompatActivity {
                 // ...
             }
         };
-        usersInfoDatabase.addChildEventListener(usersInfoListener);
+        emailQuery.addChildEventListener(lastUsersInfoListener);
     }
+
+
     //--------------------------------------------------end of list management
 
     // returns true if @param user is among people who have access to this list

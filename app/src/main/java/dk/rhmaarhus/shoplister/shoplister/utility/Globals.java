@@ -22,6 +22,8 @@ public class Globals {
     public static final String LIST_MEMBERS_NODE = "listMembers";
     public static final String SHOPPING_ITEMS_NODE = "shoppingItems";
     public static final String CHAT_NODE = "chat";
+    public static final String EMAIL_NODE = "email";
+
 
     //network
     public static final String CONNECT = "CONNECTIVITY";
