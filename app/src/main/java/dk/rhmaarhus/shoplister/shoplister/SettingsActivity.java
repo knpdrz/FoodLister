@@ -24,8 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     private Button stopFollowingBtn;
     private DialogInterface.OnClickListener dialogClickListener;
-    private DatabaseReference listMembersDatabase;
-    private DatabaseReference userListsDatabase;
+    private DatabaseReference listMembersDatabase, userListsDatabase;
     private String shoppingListID;
 
     @Override
@@ -36,8 +35,7 @@ public class SettingsActivity extends AppCompatActivity {
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
 
-        listMembersDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID);
-
+        //todo add the name to the textview
         stopFollowingBtn = findViewById(R.id.stopFollowingBtn);
 
         stopFollowingBtn.setOnClickListener(new View.OnClickListener() {
@@ -55,9 +53,11 @@ public class SettingsActivity extends AppCompatActivity {
                         case DialogInterface.BUTTON_POSITIVE:
                             //Yes button clicked unfollow the list and go back to listActivity
                             FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                            userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE + "/" + firebaseUser.getUid() + LIST_NODE);
-                            userListsDatabase.child(shoppingListID).removeValue();
-                            listMembersDatabase.child(firebaseUser.getUid()).removeValue();
+                            listMembersDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID + "/" + firebaseUser.getUid());
+                            userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE + "/" + firebaseUser.getUid() + "/" + LIST_NODE + "/" + shoppingListID);
+                            userListsDatabase.removeValue();
+                            //todo if this is the only user following the list, delete all ingredients after unfollowing
+                            listMembersDatabase.removeValue();
                             setResult(RESULT_UNFOLLOW);
                             finish();
                             break;

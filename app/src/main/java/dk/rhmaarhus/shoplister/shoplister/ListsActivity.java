@@ -199,13 +199,13 @@ public class ListsActivity extends AppCompatActivity {
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
                 Log.d(TAG, "onChildChanged: not handled yet");
-                //todo
+                //Will not happen
 
             }
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-
+                //todo have a for loop and delete the list from the list
             }
 
             @Override
