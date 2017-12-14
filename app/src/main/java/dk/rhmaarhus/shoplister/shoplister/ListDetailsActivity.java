@@ -53,7 +53,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
     private TextView shoppingListNameTextView;
 
-    private Button shareBtn, addIngredientBtn, clearBtn;
+    private Button shareBtn, addIngredientBtn, clearBtn, settingsBtn;
 
     ArrayList<ShoppingItem> ingredientList;
     ArrayList<String> friendsIdsList;
@@ -75,6 +75,7 @@ public class ListDetailsActivity extends AppCompatActivity {
         addIngredientBtn = findViewById(R.id.addIngredientBtn);
         clearBtn = findViewById(R.id.clearBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
+        settingsBtn = findViewById(R.id.settingsBtn);
 
         ingredientList = new ArrayList<ShoppingItem>();
         friendsIdsList = new ArrayList<String>();
@@ -107,6 +108,16 @@ public class ListDetailsActivity extends AppCompatActivity {
                         new Intent(getApplicationContext(), ShareActivity.class);
                 openShareActivityIntent.putExtra(LIST_ID, shoppingListID);
                 startActivityForResult(openShareActivityIntent, SHARE_SCREEN_REQ_CODE);
+            }
+        });
+
+        settingsBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openSettingsActivityIntent =
+                        new Intent(getApplicationContext(), SettingsActivity.class);
+                openSettingsActivityIntent.putExtra(LIST_ID, shoppingListID);
+                startActivityForResult(openSettingsActivityIntent, SETTINGS_REQ_CODE);
             }
         });
 

@@ -18,6 +18,7 @@ import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NO
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.RESULT_UNFOLLOW;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_LISTS_NODE;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -48,24 +49,24 @@ public class SettingsActivity extends AppCompatActivity {
 
         //Example taken from Stackoverflow: https://stackoverflow.com/questions/2478517/how-to-display-a-yes-no-dialog-box-on-android
         dialogClickListener = new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                switch (which){
-                    case DialogInterface.BUTTON_POSITIVE:
-                        //Yes button clicked unfollow the list and go back to listActivity
-                        FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-                        //userListsDatabase = FirebaseDatabase.getInstance().getReference(USER_LISTS_NODE + "/" + firebaseUser.getUid() + LIST_NODE);
-                        //userListsDatabase.child(shoppingListID).removeValue();
-                        listMembersDatabase.child(firebaseUser.getUid()).removeValue();
-                        setResult(RESULT_UNFOLLOW);
-                        finish();
-                        break;
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which){
+                        case DialogInterface.BUTTON_POSITIVE:
+                            //Yes button clicked unfollow the list and go back to listActivity
+                            FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                            userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE + "/" + firebaseUser.getUid() + LIST_NODE);
+                            userListsDatabase.child(shoppingListID).removeValue();
+                            listMembersDatabase.child(firebaseUser.getUid()).removeValue();
+                            setResult(RESULT_UNFOLLOW);
+                            finish();
+                            break;
 
-                    case DialogInterface.BUTTON_NEGATIVE:
-                        //No button clicked, nothing to be done
-                        break;
+                        case DialogInterface.BUTTON_NEGATIVE:
+                            //No button clicked, nothing to be done
+                            break;
+                    }
                 }
-            }
         };
     }
 

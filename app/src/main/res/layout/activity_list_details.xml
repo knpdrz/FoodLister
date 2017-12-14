@@ -8,14 +8,31 @@
     tools:context="dk.rhmaarhus.shoplister.shoplister.ListDetailsActivity"
     android:orientation="vertical">
 
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="listname"
-        android:gravity="center"
-        android:textSize="20sp"
-        android:id="@+id/shoppingListNameTextView"
-        />
+        android:orientation="vertical"
+        >
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="listname"
+            android:gravity="center"
+            android:textSize="20sp"
+            android:id="@+id/shoppingListNameTextView"
+            />
+
+        <Button
+            android:id="@+id/settingsBtn"
+            android:scrollbars="horizontal"
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/settings" />
+            />
+
+    </LinearLayout>
+
     <ListView
         android:id="@+id/shoppingItemListView"
         android:layout_width="wrap_content"
