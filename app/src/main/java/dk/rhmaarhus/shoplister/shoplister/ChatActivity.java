@@ -40,6 +40,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        messages = new ArrayList<ChatMessage>();
+
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
 
@@ -55,7 +57,7 @@ public class ChatActivity extends AppCompatActivity {
             public void onClick(View view) {
                 ChatMessage chatMessage = new ChatMessage(message.getText().toString(),
                         FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                chatDatabase.child(LIST_ID).setValue(chatMessage);
+                chatDatabase.child(String.valueOf(chatMessage.getMessageTime())).setValue(chatMessage);
                 message.setText("");
             }
         });
