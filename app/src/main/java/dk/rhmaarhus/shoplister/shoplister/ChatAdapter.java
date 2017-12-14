@@ -16,10 +16,14 @@ import dk.rhmaarhus.shoplister.shoplister.model.ChatMessage;
  */
 
 public class ChatAdapter extends BaseAdapter {
-
     private Context context;
     private ArrayList<ChatMessage> messages;
     private ChatMessage message;
+
+    public ChatAdapter(Context context, ArrayList<ChatMessage> messages){
+        this.messages = messages;
+        this.context = context;
+    }
 
     @Override
     public int getCount() {

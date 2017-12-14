@@ -169,7 +169,8 @@ public class ListsActivity extends AppCompatActivity {
 
     private void onLogin(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        //todo enable this
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //add (or update) the user in usersInfo node in Firebase
         usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
