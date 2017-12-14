@@ -11,15 +11,19 @@
     <ListView
         android:id="@+id/chatView"
         android:layout_width="wrap_content"
-        android:layout_height="350dp" />
+        android:layout_height="350dp"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:transcriptMode="alwaysScroll" />
 
     <LinearLayout
         android:id="@+id/linearLayout2"
-        android:layout_height="wrap_content"
         android:layout_width="fill_parent"
-        android:orientation="horizontal"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        >
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/newMessageTextView"
