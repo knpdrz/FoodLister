@@ -33,7 +33,8 @@ import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
-import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_LISTS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USER_INFO_NODE;
 
 public class ListsActivity extends AppCompatActivity {
     private static final int RC_SIGN_IN = 123;
@@ -47,7 +48,7 @@ public class ListsActivity extends AppCompatActivity {
     private Button addShoppingListBtn;
 
     private DatabaseReference userListsDatabase;
-
+    private DatabaseReference usersInfoDatabase;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -83,7 +84,7 @@ public class ListsActivity extends AppCompatActivity {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     if(firebaseUser != null){
-                        User currentUser = new User(firebaseUser.getEmail(), firebaseUser.getUid());
+                        User currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
                         addShoppingList(newListName, currentUser);
                     }else{
                         Toast.makeText(ListsActivity.this, "no user is logged in!", Toast.LENGTH_SHORT).show();
@@ -166,10 +167,15 @@ public class ListsActivity extends AppCompatActivity {
 
     private void onLogin(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        //add (or update) the user in usersInfo node in Firebase
+        usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
+        User user = new User(currentUser.getDisplayName(),currentUser.getEmail(), currentUser.getUid());
+        usersInfoDatabase.child(currentUser.getUid()).setValue(user);
 
         //get reference to firebase database
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-        userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_NODE+"/"+currentUser.getUid()+"/"+LIST_NODE);
+        userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE +"/"+currentUser.getUid()+"/"+LIST_NODE);
 
         //enabling the reading of lists (to which user has access to)
         addListsListener();
