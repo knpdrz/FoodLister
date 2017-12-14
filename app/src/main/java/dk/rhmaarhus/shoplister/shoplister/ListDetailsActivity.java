@@ -268,15 +268,12 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting friends failed, log a message
                 Log.w(TAG, "load friend:onCancelled", databaseError.toException());
-                // ...
             }
         };
         friendsIdsDatabase.addChildEventListener(friendsIdsListener);
