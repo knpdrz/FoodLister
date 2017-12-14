@@ -25,7 +25,10 @@ import dk.rhmaarhus.shoplister.shoplister.model.User;
 
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_LISTS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USER_INFO_NODE;
 
 public class ShareActivity extends AppCompatActivity {
@@ -40,6 +43,7 @@ public class ShareActivity extends AppCompatActivity {
     private DatabaseReference usersInfoDatabase;
     private DatabaseReference listMembersDatabase;
     private String shoppingListID;
+    private String shoppingListName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +64,7 @@ public class ShareActivity extends AppCompatActivity {
         //get data from previous activity (list id)
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
+        shoppingListName = parentIntent.getStringExtra(LIST_NAME);
 
 
         //setting users list that will be displayed in the list view
@@ -74,8 +79,20 @@ public class ShareActivity extends AppCompatActivity {
 
     //called by list adapter, when user clicked 'share' button of a particular user
     public void shareListWithUser(User userToShareWith){
+        //add member to this particular list
         listMembersDatabase.child(userToShareWith.getUid()).setValue(userToShareWith.getUid());
-        Log.d(TAG, "!!! now we're sharing this list with "+userToShareWith.getName());
+
+        //get hold of a list handler of a user that we're trying to share the list with
+        ShoppingList shoppingList = new ShoppingList(shoppingListName);
+        shoppingList.setFirebaseKey(shoppingListID);
+
+        //add list to that added user's lists at usersLists/addedUserID/lists
+        FirebaseDatabase
+                .getInstance()
+                .getReference(USERS_LISTS_NODE + "/" + userToShareWith.getUid()+"/"+LIST_NODE)
+                .child(shoppingListID)
+                .setValue(shoppingList);
+
     }
 
     //todo this is going to be searching for user in our db
