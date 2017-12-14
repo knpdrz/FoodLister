@@ -1,5 +1,6 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -22,6 +23,8 @@ import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USER_INFO_NODE;
 
@@ -35,6 +38,8 @@ public class ShareActivity extends AppCompatActivity {
     private Button addUserBtn;
 
     private DatabaseReference usersInfoDatabase;
+    private DatabaseReference listMembersDatabase;
+    private String shoppingListID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,12 +57,25 @@ public class ShareActivity extends AppCompatActivity {
             }
         });
 
+        //get data from previous activity (list id)
+        Intent parentIntent = getIntent();
+        shoppingListID = parentIntent.getStringExtra(LIST_ID);
+
+
         //setting users list that will be displayed in the list view
         users = new ArrayList<User>();
 
+        //get reference to listMembers to be able to share list with others
+        listMembersDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID);
 
         //setting up the list view of users (friends)
         prepareListView();
+    }
+
+    //called by list adapter, when user clicked 'share' button of a particular user
+    public void shareListWithUser(User userToShareWith){
+        listMembersDatabase.child(userToShareWith.getUid()).setValue(userToShareWith.getUid());
+        Log.d(TAG, "!!! now we're sharing this list with "+userToShareWith.getName());
     }
 
     //todo this is going to be searching for user in our db
@@ -65,7 +83,7 @@ public class ShareActivity extends AppCompatActivity {
         addUserToListView(userName);
     }
 
-
+    //-------------------------------------------------------------------list view management
     //adds user to list view
     private void addUserToListView(String userName){
         Log.d(TAG, "addUserToListView: adding  NOONE NOW COMMENTED"+userName);
@@ -74,7 +92,6 @@ public class ShareActivity extends AppCompatActivity {
         adapter.notifyDataSetChanged();*/
     }
 
-    //-------------------------------------------------------------------list view management
     //setting up ListView, that will display contents of users list
     private void prepareListView(){
         prepareUsersDataset();
@@ -104,15 +121,16 @@ public class ShareActivity extends AppCompatActivity {
                 if(firebaseUser != null){
                     //we don't won't to be friends with ourselves
                     //so don't add currently logged in user to users list
-                    if(firebaseUser.getUid() != user.getUid()){
+                    if(!firebaseUser.getUid().equals(user.getUid())){
                         users.add(user);
                         adapter.notifyDataSetChanged();
+                        Log.d(TAG, "onChildAdded: user added to users list!");
                     }
                 }else{
                     Log.d(TAG, "onChildAdded: there's noone logged in- that's a problem, contact dev");
                 }
 
-                Log.d(TAG, "onChildAdded: user added to users list!");
+
             }
 
             @Override
@@ -155,4 +173,6 @@ public class ShareActivity extends AppCompatActivity {
         usersInfoDatabase.addChildEventListener(usersInfoListener);
     }
     //--------------------------------------------------end of list management
+
+
 }
