@@ -1,7 +1,6 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
-import android.graphics.Paint;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,13 +20,10 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
-import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
-import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
@@ -46,7 +42,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
     private TextView shoppingListNameTextView;
 
-    private Button shareBtn, addIngredientBtn, clearBtn;
+    private Button shareBtn, addIngredientBtn, clearBtn, chatBtn;
 
     ArrayList<ShoppingItem> ingredientList;
     ArrayList<String> friendsIdsList;
@@ -67,6 +63,7 @@ public class ListDetailsActivity extends AppCompatActivity {
         shareBtn = findViewById(R.id.shareBtn);
         addIngredientBtn = findViewById(R.id.addIngredientBtn);
         clearBtn = findViewById(R.id.clearBtn);
+        chatBtn = findViewById(R.id.chatBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
 
         ingredientList = new ArrayList<ShoppingItem>();
@@ -122,6 +119,15 @@ public class ListDetailsActivity extends AppCompatActivity {
                         shoppingItemDatabase.child(shoppingItem.getName()).removeValue();
                     }
                 }
+            }
+        });
+
+        chatBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent chatIntent = new Intent(getApplicationContext(), ChatActivity.class);
+                chatIntent.putExtra(LIST_ID, shoppingListID);
+                startActivity(chatIntent);
             }
         });
     }
