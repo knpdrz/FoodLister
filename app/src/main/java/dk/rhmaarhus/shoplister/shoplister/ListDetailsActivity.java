@@ -84,7 +84,6 @@ public class ListDetailsActivity extends AppCompatActivity {
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
         addShoppingItemsListener();
 
-
         //and reference to ids of people who share this particular list
         friendsIdsDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID);
         addFriendsIdsListener();
