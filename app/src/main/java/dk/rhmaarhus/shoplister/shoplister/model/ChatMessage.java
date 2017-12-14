@@ -1,7 +1,12 @@
 package dk.rhmaarhus.shoplister.shoplister.model;
 
+import android.util.Log;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.TimeZone;
+
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
 
 /**
  * Created by rjkey on 12-12-2017.
@@ -16,16 +21,21 @@ public class ChatMessage {
     public ChatMessage(String chatMessage, String chatUser){
         message = chatMessage;
         user = TrimUsername(chatUser);
-        messageTime = GetCurrentTime();
+        messageTime = GetGMTTime();
 
         TrimUsername(user);
     }
 
-    private String GetCurrentTime() {
+    private String GetGMTTime() {
+        TimeZone myTimeZone = TimeZone.getDefault();
+        TimeZone.setDefault(TimeZone.getTimeZone("GMT"));
         Date date = new Date();
-        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-        String currentdate = sdf.format(date);
-        return currentdate;
+        long time = date.getTime();
+
+        String gmtDate = String.valueOf(time);
+
+        TimeZone.setDefault(myTimeZone);
+        return gmtDate;
     }
 
     private String TrimUsername(String user) {
@@ -62,7 +72,17 @@ public class ChatMessage {
     }
 
     public void setMessageTime(String time){
-        messageTime = time;
+        try{
+            long longTime = Long.parseLong(time);
+            Date d = new Date(longTime);
+            SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+            String currentdate = sdf.format(d);
+            messageTime = currentdate;
+
+        }catch(Exception e){
+            Log.d(TAG, "setMessageTime: " + e);
+            messageTime = time;
+        }
     }
 
 
