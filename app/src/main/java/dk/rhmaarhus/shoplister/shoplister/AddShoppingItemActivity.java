@@ -1,5 +1,6 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -114,6 +115,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         }
     }
 
+    @SuppressLint("ResourceAsColor")
     private void click(String name, TextView listNameTextView) {
         Boolean value = hasBeenClicked.get(name);
         if (value){
@@ -125,7 +127,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         }
         else{
             hasBeenClicked.put(name, true);
-            listNameTextView.setBackgroundColor(Color.parseColor("#5882FA"));
+            listNameTextView.setBackgroundColor(R.color.colorAccent);
 
             ShoppingItem item = new ShoppingItem(name);
             itemToShoppingList.add(item);

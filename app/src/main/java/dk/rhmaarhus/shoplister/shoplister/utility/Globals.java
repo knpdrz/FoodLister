@@ -14,6 +14,10 @@ public class Globals {
     //request codes
     public static final int LIST_DETAILS_REQ_CODE = 1;
     public static final int SHARE_SCREEN_REQ_CODE = 2;
+    public static final int SETTINGS_REQ_CODE = 3;
+
+    //result codes
+    public static final int RESULT_UNFOLLOW = 20;
 
     //database references
     public static final String LIST_NODE = "lists";

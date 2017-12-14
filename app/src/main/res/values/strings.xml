@@ -9,4 +9,9 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="clear">Clear marked items</string>
+    <string name="stopFollowing">Stop following a list</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>>
+    <string name="confirmUnfollowWarning">Are you sure you want to unfollow this list?</string>
+
 </resources>

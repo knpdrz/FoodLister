@@ -6,13 +6,18 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.firebase.ui.auth.IdpResponse;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -31,6 +36,8 @@ import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_RE
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.RESULT_UNFOLLOW;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SETTINGS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHARE_SCREEN_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
@@ -302,6 +309,19 @@ public class ListDetailsActivity extends AppCompatActivity {
                 .getReference(USER_INFO_NODE + "/" + friendId)
                 .addValueEventListener(friendEventListener);
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == SETTINGS_REQ_CODE) {
+            IdpResponse response = IdpResponse.fromResultIntent(data);
+            if (resultCode == RESULT_UNFOLLOW) {
+                //Need to close the list since it's not followed anymore
+                finish();
+            }
+        }
     }
 
 }
