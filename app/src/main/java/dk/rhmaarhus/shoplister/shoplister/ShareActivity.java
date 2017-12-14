@@ -36,12 +36,14 @@ public class ShareActivity extends AppCompatActivity {
     private ListView listView;
 
     private ArrayList<User> users;
+    private ArrayList<String> membersIdsList;
 
     private EditText findUserEditText;
     private Button addUserBtn;
 
     private DatabaseReference usersInfoDatabase;
     private DatabaseReference listMembersDatabase;
+
     private String shoppingListID;
     private String shoppingListName;
 
@@ -70,8 +72,13 @@ public class ShareActivity extends AppCompatActivity {
         //setting users list that will be displayed in the list view
         users = new ArrayList<User>();
 
+        //setting list of ids of members of this list
+        membersIdsList = new ArrayList<String>();
+
         //get reference to listMembers to be able to share list with others
         listMembersDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID);
+        addMembersListener();
+
 
         //setting up the list view of users (friends)
         prepareListView();
@@ -146,8 +153,6 @@ public class ShareActivity extends AppCompatActivity {
                 }else{
                     Log.d(TAG, "onChildAdded: there's noone logged in- that's a problem, contact dev");
                 }
-
-
             }
 
             @Override
@@ -191,5 +196,50 @@ public class ShareActivity extends AppCompatActivity {
     }
     //--------------------------------------------------end of list management
 
+    // returns true if @param user is among people who have access to this list
+    // used by list adapter
+    public boolean userIsAFriend(User user){
+        return membersIdsList.contains(user.getUid());
+    }
+
+    private void addMembersListener(){
+        ChildEventListener membersListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                String newUserId = (String)dataSnapshot.getValue();
+                membersIdsList.add(newUserId);
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                //id won't change
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                String removedFriendsId = dataSnapshot.getValue(String.class);
+                for(int i = 0; i < membersIdsList.size(); i++ ) {
+                    if(membersIdsList.get(i).equals(removedFriendsId)) {
+                        //remove id from id's list
+                        membersIdsList.remove(i);
+                        break;
+                    }
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                // Getting friends failed, log a message
+                Log.w(TAG, "onCancelled", databaseError.toException());
+            }
+        };
+        listMembersDatabase.addChildEventListener(membersListener);
+    }
 
 }
