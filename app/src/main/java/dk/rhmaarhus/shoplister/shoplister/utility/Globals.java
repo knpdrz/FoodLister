@@ -23,6 +23,9 @@ public class Globals {
     public static final String SHOPPING_ITEMS_NODE = "shoppingItems";
     public static final String CHAT_NODE = "chat";
 
+    //network
+    public static final String CONNECT = "CONNECTIVITY";
+
 
 
 }
