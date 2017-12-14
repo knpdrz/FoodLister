@@ -25,6 +25,9 @@ public class Globals {
     public static final String EMAIL_NODE = "email";
 
 
+    //network
+    public static final String CONNECT = "CONNECTIVITY";
+
 
 
 }
