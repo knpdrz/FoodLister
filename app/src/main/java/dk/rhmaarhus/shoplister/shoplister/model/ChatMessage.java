@@ -1,5 +1,6 @@
 package dk.rhmaarhus.shoplister.shoplister.model;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -10,12 +11,30 @@ public class ChatMessage {
 
     private String message;
     private String user;
-    private long messageTime;
+    private String messageTime;
 
     public ChatMessage(String chatMessage, String chatUser){
         message = chatMessage;
-        user = chatUser;
-        messageTime = new Date().getTime();
+        user = TrimUsername(chatUser);
+        messageTime = GetCurrentTime();
+
+        TrimUsername(user);
+    }
+
+    private String GetCurrentTime() {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String currentdate = sdf.format(date);
+        return currentdate;
+    }
+
+    private String TrimUsername(String user) {
+        int spacePos = user.indexOf(" ");
+        String string = user;
+        if (spacePos > 0){
+            string = user.substring(0, spacePos);
+        }
+        return string;
     }
 
     public ChatMessage(){
@@ -38,11 +57,11 @@ public class ChatMessage {
         this.user = user;
     }
 
-    public long getMessageTime(){
+    public String getMessageTime(){
         return messageTime;
     }
 
-    public void setMessageTime(long time){
+    public void setMessageTime(String time){
         messageTime = time;
     }
 

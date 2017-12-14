@@ -66,6 +66,6 @@ public class ChatAdapter extends BaseAdapter {
 
         userText.setText(message.getUser());
         messageText.setText(message.getMessage());
-        timeText.setText((int) message.getMessageTime());
+        timeText.setText(message.getMessageTime());
     }
 }
