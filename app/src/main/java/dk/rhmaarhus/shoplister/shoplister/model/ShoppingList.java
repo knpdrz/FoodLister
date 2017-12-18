@@ -15,7 +15,7 @@ public class ShoppingList {
 
     public ShoppingList(){}
 
-    public ShoppingList(String name, User user){
+    public ShoppingList(String name){
         this.name = name;
 
     }

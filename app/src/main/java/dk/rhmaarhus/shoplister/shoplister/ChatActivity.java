@@ -40,6 +40,8 @@ public class ChatActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chat);
 
+        messages = new ArrayList<ChatMessage>();
+
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
 
@@ -48,14 +50,15 @@ public class ChatActivity extends AppCompatActivity {
         chatDatabase = FirebaseDatabase.getInstance().getReference(CHAT_NODE + "/" + shoppingListID);
         addChatListener();
 
-        message = findViewById(R.id.newMessageTextView);
+        message = (EditText)findViewById(R.id.newMessageTextView);
         sendBtn = findViewById(R.id.sendMessageBtn);
         sendBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 ChatMessage chatMessage = new ChatMessage(message.getText().toString(),
                         FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
-                chatDatabase.child(LIST_ID).setValue(chatMessage);
+                String key = String.valueOf(chatMessage.getMessageTime()+FirebaseAuth.getInstance().getCurrentUser().getUid());
+                chatDatabase.child(key).setValue(chatMessage);
                 message.setText("");
             }
         });

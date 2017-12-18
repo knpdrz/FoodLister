@@ -31,6 +31,7 @@ import dk.rhmaarhus.shoplister.shoplister.model.User;
 
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
@@ -88,6 +89,8 @@ public class ListsActivity extends AppCompatActivity {
                     if(firebaseUser != null){
                         User currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
                         addShoppingList(newListName, currentUser);
+
+
                     }else{
                         Toast.makeText(ListsActivity.this, "no user is logged in!", Toast.LENGTH_SHORT).show();
                     }
@@ -109,12 +112,20 @@ public class ListsActivity extends AppCompatActivity {
     }
 
     private void addShoppingList(String listName, User user){
-        ShoppingList shopList = new ShoppingList(listName, user);
+        ShoppingList shopList = new ShoppingList(listName);
         Log.d(TAG, "addShoppingList: adding "+listName + " owned by " + user.getName());
 
         shopList.setFirebaseKey(userListsDatabase.push().getKey());
         userListsDatabase.child(shopList.getFirebaseKey()).setValue(shopList);
         shoppingListEditText.getText().clear();
+
+        //add user to listMembers node in firebase database
+        FirebaseDatabase
+                .getInstance()
+                .getReference(LIST_MEMBERS_NODE + "/" + shopList.getFirebaseKey())
+                .child(user.getUid())
+                .setValue(user.getUid());
+
     }
 
     //-------------------------------------------------------------------list view management
@@ -205,7 +216,11 @@ public class ListsActivity extends AppCompatActivity {
 
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
-                //todo have a for loop and delete the list from the list
+                for(ShoppingList list : shoppingLists) {
+                    if(list.getFirebaseKey() == dataSnapshot.getKey()) {
+                        shoppingLists.remove(list);
+                    }
+                }
             }
 
             @Override

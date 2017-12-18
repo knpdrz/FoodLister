@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import com.firebase.ui.auth.IdpResponse;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -104,6 +105,7 @@ public class ListDetailsActivity extends AppCompatActivity {
                 Intent openShareActivityIntent =
                         new Intent(getApplicationContext(), ShareActivity.class);
                 openShareActivityIntent.putExtra(LIST_ID, shoppingListID);
+                openShareActivityIntent.putExtra(LIST_NAME, shoppingListName);
                 startActivityForResult(openShareActivityIntent, SHARE_SCREEN_REQ_CODE);
             }
         });
@@ -240,13 +242,22 @@ public class ListDetailsActivity extends AppCompatActivity {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                //HashMap<String,String> idsHashMap = dataSnapshot.getValue(HashMap<String,String>.class);
-                //HashMap <String, String> idsHashMap = (HashMap)dataSnapshot.getValue();
                 String newUserId = (String)dataSnapshot.getValue();
-                friendsIdsList.add(newUserId);
 
-                Log.d(TAG, "onChildAdded: adding friend with id " + newUserId);
-                addFriendListener(newUserId);
+                //we don't want to display currently logged in user as friend
+                //so get currently logged in user
+                //check if the one we got from firebase is that one
+                //and if they are NOT the same person, add them to friends id's list
+                FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+                if(firebaseUser != null){
+                    if(!firebaseUser.getUid().equals(newUserId)){
+                        friendsIdsList.add(newUserId);
+                        addFriendListener(newUserId);
+                    }
+                }else{
+                    Log.d(TAG, "onChildAdded: noone is logged in, that shouldn't happen, contact dev");
+                }
+
             }
 
             @Override
