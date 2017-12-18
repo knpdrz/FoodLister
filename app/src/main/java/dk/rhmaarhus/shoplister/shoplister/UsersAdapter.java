@@ -71,14 +71,26 @@ class UsersAdapter extends BaseAdapter{
         TextView listNameTextView = (TextView)view.findViewById(R.id.userItemNameTextView);
         listNameTextView.setText(selectedUser.getName());
 
-        Button shareButton = view.findViewById(R.id.userItemShareButton);
+        final Button shareButton = view.findViewById(R.id.userItemShareButton);
         shareButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //call function of ShareActivity to share the list with selectedUser
                 ((ShareActivity)context).shareListWithUser(selectedUser);
+                shareButton.setEnabled(false);
+                shareButton.setText(R.string.shared);
+
             }
         });
+
+        //if we're sharing the list with that person, we want 'share' button
+        //next to their name be disabled
+        if(((ShareActivity)context).userIsAFriend(selectedUser)){
+            shareButton.setEnabled(false);
+            shareButton.setText(R.string.shared);
+        }
+
+
 
     }
 }

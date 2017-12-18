@@ -1,5 +1,7 @@
 package dk.rhmaarhus.shoplister.shoplister.model;
 
+import java.net.URI;
+
 /**
  * Created by Moon on 30.11.2017.
  */
@@ -7,16 +9,15 @@ package dk.rhmaarhus.shoplister.shoplister.model;
 public class User {
     private String name;
     private String email;
-    private String image;
+    private URI imageURI;
     private String uid;
 
     public User(){}
-    public User(String name, String email, String uid){
+    public User(String name, String email, String uid, URI imageURI){
         this.uid = uid;
         this.name = name;
         this.email = email;
-        //todo !
-        this.image = "thiswillbeurlorsth";
+        this.imageURI = imageURI;
     }
 
     public String getEmail(){
@@ -29,5 +30,9 @@ public class User {
 
     public String getUid() {
         return uid;
+    }
+
+    public URI getImageURI() {
+        return imageURI;
     }
 }

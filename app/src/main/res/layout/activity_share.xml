@@ -16,7 +16,7 @@
         android:paddingTop="10dp"
         >
         <EditText
-            android:id="@+id/addUserEditText"
+            android:id="@+id/searchForUserEditText"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -26,11 +26,11 @@
             android:layout_weight="30"/>
 
         <Button
-            android:id="@+id/addUserBtn"
+            android:id="@+id/searchForUserButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="@string/addFriend" />
+            android:text="@string/search" />
 
     </LinearLayout>
     <ListView

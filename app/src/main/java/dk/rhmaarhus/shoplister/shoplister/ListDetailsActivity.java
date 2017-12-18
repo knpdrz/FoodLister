@@ -2,6 +2,7 @@ package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -51,7 +52,8 @@ public class ListDetailsActivity extends AppCompatActivity {
     private TextView shoppingListNameTextView;
 
     private Button shareBtn, addIngredientBtn, clearBtn, settingsBtn, chatBtn;
-
+    private Button shareBtn, addIngredientBtn, clearBtn, chatBtn;
+    private FloatingActionButton addFabBtn;
 
     ArrayList<ShoppingItem> ingredientList;
     ArrayList<String> friendsIdsList;
@@ -73,6 +75,7 @@ public class ListDetailsActivity extends AppCompatActivity {
         addIngredientBtn = findViewById(R.id.addIngredientBtn);
         clearBtn = findViewById(R.id.clearBtn);
         chatBtn = findViewById(R.id.chatBtn);
+        addFabBtn = findViewById(R.id.addFabBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
         settingsBtn = findViewById(R.id.settingsBtn);
 
@@ -148,6 +151,17 @@ public class ListDetailsActivity extends AppCompatActivity {
                 Intent chatIntent = new Intent(getApplicationContext(), ChatActivity.class);
                 chatIntent.putExtra(LIST_ID, shoppingListID);
                 startActivity(chatIntent);
+            }
+        });
+
+        addFabBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //prepareIngredientsList();
+                Intent addShoppingItemIntent =
+                        new Intent(getApplicationContext(), AddShoppingItemActivity.class);
+                addShoppingItemIntent.putExtra(LIST_ID, shoppingListID);
+                startActivity(addShoppingItemIntent);
             }
         });
     }
@@ -286,15 +300,12 @@ public class ListDetailsActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) { }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
                 // Getting friends failed, log a message
                 Log.w(TAG, "load friend:onCancelled", databaseError.toException());
-                // ...
             }
         };
         friendsIdsDatabase.addChildEventListener(friendsIdsListener);

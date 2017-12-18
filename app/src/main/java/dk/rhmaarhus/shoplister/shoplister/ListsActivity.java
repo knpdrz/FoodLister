@@ -87,7 +87,7 @@ public class ListsActivity extends AppCompatActivity {
                     FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     if(firebaseUser != null){
-                        User currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid());
+                        User currentUser = new User(firebaseUser.getDisplayName(), firebaseUser.getEmail(), firebaseUser.getUid(),null);
                         addShoppingList(newListName, currentUser);
 
 
@@ -165,10 +165,8 @@ public class ListsActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(this, "user logged in! name = " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
+
                 onLogin();
-
-
-
             } else {
                 // Sign in failed, check response for error code
                 // ...
@@ -185,7 +183,7 @@ public class ListsActivity extends AppCompatActivity {
 
         //add (or update) the user in usersInfo node in Firebase
         usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
-        User user = new User(currentUser.getDisplayName(),currentUser.getEmail(), currentUser.getUid());
+        User user = new User(currentUser.getDisplayName(),currentUser.getEmail(), currentUser.getUid(),null);
         usersInfoDatabase.child(currentUser.getUid()).setValue(user);
 
         //get reference to firebase database
