@@ -21,7 +21,6 @@
         <activity android:name=".ListDetailsActivity" />
         <activity android:name=".ShareActivity" />
         <activity android:name=".AddShoppingItemActivity" />
-        <activity android:name=".ChatActivity" />
         <activity android:name=".SettingsActivity"></activity>
         <activity android:name=".ChatActivity" android:windowSoftInputMode="adjustPan"/>
     </application>

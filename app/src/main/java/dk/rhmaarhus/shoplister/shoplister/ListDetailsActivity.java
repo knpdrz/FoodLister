@@ -52,7 +52,6 @@ public class ListDetailsActivity extends AppCompatActivity {
     private TextView shoppingListNameTextView;
 
     private Button shareBtn, addIngredientBtn, clearBtn, settingsBtn, chatBtn;
-    private Button shareBtn, addIngredientBtn, clearBtn, chatBtn;
     private FloatingActionButton addFabBtn;
 
     ArrayList<ShoppingItem> ingredientList;
