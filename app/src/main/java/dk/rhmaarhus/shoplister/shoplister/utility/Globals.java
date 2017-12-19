@@ -15,6 +15,7 @@ public class Globals {
     public static final int LIST_DETAILS_REQ_CODE = 1;
     public static final int SHARE_SCREEN_REQ_CODE = 2;
     public static final int SETTINGS_REQ_CODE = 3;
+    public static final int RC_SIGN_IN = 123;
 
     //result codes
     public static final int RESULT_UNFOLLOW = 20;

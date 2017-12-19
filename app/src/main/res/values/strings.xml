@@ -15,4 +15,6 @@
     <string name="settings">Settings</string>
     <string name="confirmUnfollowWarning">Are you sure you want to unfollow this list?</string>
     <string name="shared">shared!</string>
+    <string name="action_user">User details</string>
+    <string name="action_settings">List settings</string>
 </resources>

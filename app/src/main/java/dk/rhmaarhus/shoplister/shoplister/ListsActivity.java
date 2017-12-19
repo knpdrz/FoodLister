@@ -2,9 +2,14 @@ package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -14,6 +19,8 @@ import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -47,7 +54,7 @@ public class ListsActivity extends AppCompatActivity {
     private ArrayList<ShoppingList> shoppingLists;
 
     private EditText shoppingListEditText;
-    private Button addShoppingListBtn;
+    private FloatingActionButton addShoppingListBtn;
 
     private DatabaseReference userListsDatabase;
     private DatabaseReference usersInfoDatabase;
@@ -57,7 +64,7 @@ public class ListsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
         
-        //send authentication intent
+        /*//send authentication intent
         List<AuthUI.IdpConfig> providers = Arrays.asList(
                 new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
 
@@ -71,12 +78,12 @@ public class ListsActivity extends AppCompatActivity {
                         .setLogo(R.mipmap.ic_launcher)
                         .build(),
                 RC_SIGN_IN);
-
-
+*/
 
         shoppingListEditText = findViewById(R.id.newListEditText);
 
         addShoppingListBtn = findViewById(R.id.addShoppingListBtn);
+
         addShoppingListBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -104,11 +111,38 @@ public class ListsActivity extends AppCompatActivity {
         //setting shopping lists list that will be displayed in the list view
         shoppingLists = new ArrayList<ShoppingList>();
 
-
         //setting up the list view of shopping list
         prepareListView();
 
+        onLogin();
+    }
 
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_user:
+                Log.d(TAG, "User icon was clicked and should be logged out");
+                AuthUI.getInstance()
+                        .signOut(this)
+                        .addOnCompleteListener(new OnCompleteListener<Void>() {
+                            public void onComplete(@NonNull Task<Void> task) {
+                                //todo open login again
+                            }
+                        });
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 
     private void addShoppingList(String listName, User user){
@@ -154,7 +188,7 @@ public class ListsActivity extends AppCompatActivity {
 
     //--------------------------------------------------end of list management
 
-    @Override
+   /* @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -174,7 +208,7 @@ public class ListsActivity extends AppCompatActivity {
 
             }
         }
-    }
+    }*/
 
     private void onLogin(){
         FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -215,7 +249,8 @@ public class ListsActivity extends AppCompatActivity {
             @Override
             public void onChildRemoved(DataSnapshot dataSnapshot) {
                 for(ShoppingList list : shoppingLists) {
-                    if(list.getFirebaseKey() == dataSnapshot.getKey()) {
+                    //todo check, is not working. Are the keys the same?
+                    if(list.getFirebaseKey().equals(dataSnapshot.getKey())) {
                         shoppingLists.remove(list);
                     }
                 }

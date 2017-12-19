@@ -5,8 +5,10 @@ import android.content.Intent;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -15,17 +17,21 @@ import com.google.firebase.database.FirebaseDatabase;
 
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_MEMBERS_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NAME;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.RESULT_UNFOLLOW;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHARE_SCREEN_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_LISTS_NODE;
 
 public class SettingsActivity extends AppCompatActivity {
 
-    private Button stopFollowingBtn;
+    private Button stopFollowingBtn, shareListBtn;
+    private TextView listSettingsTextView;
     private DialogInterface.OnClickListener dialogClickListener;
     private DatabaseReference listMembersDatabase, userListsDatabase;
     private String shoppingListID;
+    private String shoppingListName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +40,13 @@ public class SettingsActivity extends AppCompatActivity {
 
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
+        shoppingListName = parentIntent.getStringExtra(LIST_NAME);
 
-        //todo add the name to the textview
+        listSettingsTextView = findViewById(R.id.listSettingsTextView);
+        listSettingsTextView.setText(shoppingListName);
+
         stopFollowingBtn = findViewById(R.id.stopFollowingBtn);
+        shareListBtn = findViewById(R.id.shareListBtn);
 
         stopFollowingBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -68,6 +78,17 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 }
         };
+
+        shareListBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent openShareActivityIntent =
+                        new Intent(getApplicationContext(), ShareActivity.class);
+                openShareActivityIntent.putExtra(LIST_ID, shoppingListID);
+                openShareActivityIntent.putExtra(LIST_NAME, shoppingListName);
+                startActivityForResult(openShareActivityIntent, SHARE_SCREEN_REQ_CODE);
+            }
+        });
     }
 
     private void confirmUnfollow() {

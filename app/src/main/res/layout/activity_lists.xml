@@ -30,12 +30,14 @@ android:orientation="vertical"
             android:textAlignment="center"
             android:layout_weight="30"/>
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/addShoppingListBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="+" />
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@android:drawable/ic_input_add"
+            />
 
     </LinearLayout>
 

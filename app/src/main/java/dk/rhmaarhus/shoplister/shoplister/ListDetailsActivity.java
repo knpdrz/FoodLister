@@ -2,12 +2,16 @@ package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -16,7 +20,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -51,7 +58,7 @@ public class ListDetailsActivity extends AppCompatActivity {
 
     private TextView shoppingListNameTextView;
 
-    private Button shareBtn, addIngredientBtn, clearBtn, settingsBtn, chatBtn;
+    private Button addIngredientBtn, clearBtn, chatBtn;
     private FloatingActionButton addFabBtn;
 
     ArrayList<ShoppingItem> ingredientList;
@@ -70,13 +77,13 @@ public class ListDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_details);
 
-        shareBtn = findViewById(R.id.shareBtn);
-        addIngredientBtn = findViewById(R.id.addIngredientBtn);
+        //Display the back arrow todo??
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         clearBtn = findViewById(R.id.clearBtn);
         chatBtn = findViewById(R.id.chatBtn);
         addFabBtn = findViewById(R.id.addFabBtn);
         shoppingListNameTextView = findViewById(R.id.shoppingListNameTextView);
-        settingsBtn = findViewById(R.id.settingsBtn);
 
         ingredientList = new ArrayList<ShoppingItem>();
         friendsIdsList = new ArrayList<String>();
@@ -101,37 +108,6 @@ public class ListDetailsActivity extends AppCompatActivity {
         addFriendsIdsListener();
         prepareRecyclerView();
 
-        shareBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent openShareActivityIntent =
-                        new Intent(getApplicationContext(), ShareActivity.class);
-                openShareActivityIntent.putExtra(LIST_ID, shoppingListID);
-                openShareActivityIntent.putExtra(LIST_NAME, shoppingListName);
-                startActivityForResult(openShareActivityIntent, SHARE_SCREEN_REQ_CODE);
-            }
-        });
-
-        settingsBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent openSettingsActivityIntent =
-                        new Intent(getApplicationContext(), SettingsActivity.class);
-                openSettingsActivityIntent.putExtra(LIST_ID, shoppingListID);
-                startActivityForResult(openSettingsActivityIntent, SETTINGS_REQ_CODE);
-            }
-        });
-
-        addIngredientBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //prepareIngredientsList();
-                Intent addShoppingItemIntent =
-                        new Intent(getApplicationContext(), AddShoppingItemActivity.class);
-                addShoppingItemIntent.putExtra(LIST_ID, shoppingListID);
-                startActivity(addShoppingItemIntent);
-            }
-        });
 
         clearBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -165,6 +141,25 @@ public class ListDetailsActivity extends AppCompatActivity {
         });
     }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_settings:
+                Intent openSettingsActivityIntent =
+                        new Intent(getApplicationContext(), SettingsActivity.class);
+                openSettingsActivityIntent.putExtra(LIST_ID, shoppingListID);
+                openSettingsActivityIntent.putExtra(LIST_NAME, shoppingListName);
+                startActivityForResult(openSettingsActivityIntent, SETTINGS_REQ_CODE);
+                return true;
+
+            default:
+                // If we got here, the user's action was not recognized.
+                // Invoke the superclass to handle it.
+                return super.onOptionsItemSelected(item);
+
+        }
+    }
+
     private void prepareList() {
         shoppingItemAdapter = new ShoppingItemAdapter(this, ingredientList, shoppingListID);
         shoppingItemListView = findViewById(R.id.shoppingItemListView);
@@ -181,6 +176,12 @@ public class ListDetailsActivity extends AppCompatActivity {
                 shoppingItemDatabase.child(ingredientList.get(position).getName()).setValue(ingredientList.get(position));
             }
         });
+    }
+
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.list_menu, menu);
+        return true;
     }
 
     private void prepareRecyclerView(){

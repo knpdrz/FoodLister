@@ -22,14 +22,6 @@
             android:id="@+id/shoppingListNameTextView"
             />
 
-        <Button
-            android:id="@+id/settingsBtn"
-            android:scrollbars="horizontal"
-            android:layout_width="wrap_content"
-            android:layout_height="70dp"
-            android:layout_gravity="center_horizontal"
-            android:text="@string/settings" />
-            />
 
     </LinearLayout>
 
@@ -46,27 +38,6 @@
         android:orientation="horizontal"
         >
 
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addFabBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom|end"
-            android:layout_margin="@dimen/fab_margin"
-            android:src="@android:drawable/ic_input_add"
-            />
-        <Button
-            android:id="@+id/addIngredientBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="+" />
-        <Button
-            android:id="@+id/shareBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:text="@string/share" />
-
         <Button
             android:id="@+id/clearBtn"
             android:layout_width="wrap_content"
@@ -80,6 +51,15 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="Chat" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addFabBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@android:drawable/ic_input_add"
+            />
     </LinearLayout>
     <!--thanks to https://stackoverflow.com/questions/30007956/how-to-center-items-of-a-recyclerview-->
     <LinearLayout
