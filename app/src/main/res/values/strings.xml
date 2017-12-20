@@ -17,4 +17,5 @@
     <string name="shared">shared!</string>
     <string name="action_user">User details</string>
     <string name="action_settings">List settings</string>
+    <string name="log_out">log out</string>
 </resources>
