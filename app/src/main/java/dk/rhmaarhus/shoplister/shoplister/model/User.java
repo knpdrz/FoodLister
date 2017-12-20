@@ -9,15 +9,15 @@ import java.net.URI;
 public class User {
     private String name;
     private String email;
-    private URI imageURI;
+    private String imageUrl;
     private String uid;
 
     public User(){}
-    public User(String name, String email, String uid, URI imageURI){
+    public User(String name, String email, String uid, String imageUrl){
         this.uid = uid;
         this.name = name;
         this.email = email;
-        this.imageURI = imageURI;
+        this.imageUrl = imageUrl;
     }
 
     public String getEmail(){
@@ -32,7 +32,7 @@ public class User {
         return uid;
     }
 
-    public URI getImageURI() {
-        return imageURI;
+    public String getImageUrl() {
+        return imageUrl;
     }
 }

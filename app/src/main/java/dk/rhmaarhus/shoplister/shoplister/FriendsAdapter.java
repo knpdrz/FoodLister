@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
+import com.bumptech.glide.Glide;
+
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 
 /**
@@ -23,7 +25,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         public TextView friendNameTextView;
         public ImageView friendImageView;
 
-        public TextView nameTextView;
         public ViewHolder(View v) {
             super(v);
             friendNameTextView = v.findViewById(R.id.friendNameTextView);
@@ -52,9 +53,21 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
     public void onBindViewHolder(FriendsAdapter.ViewHolder holder, int position) {
         // - get element from friends dataset at this position
         // - replace the contents of the view with that element
-        holder.friendNameTextView.setText(friendsDataset.get(position).getName());
-        //todo set actual user image
-        holder.friendImageView.setImageResource(R.mipmap.ic_launcher);
+        User user = friendsDataset.get(position);
+        holder.friendNameTextView.setText(user.getName());
+
+        //based on https://github.com/udacity/and-nd-firebase
+        //set user photo, if they have any
+        boolean photoAvailable = user.getImageUrl() != null;
+        if(photoAvailable){
+            Glide.with(holder.friendImageView.getContext())
+                    .load(user.getImageUrl())
+                    .into(holder.friendImageView);
+        }else{
+            //user doesn't have a photo, set a default one
+            holder.friendImageView.setImageResource(R.drawable.icon_user);
+
+        }
     }
 
     @Override

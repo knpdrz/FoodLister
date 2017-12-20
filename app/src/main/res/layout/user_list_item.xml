@@ -3,12 +3,18 @@
     android:orientation="horizontal" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView android:id="@+id/userImageView"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerVertical="true"
+        />
     <TextView
         android:id="@+id/userItemNameTextView"
         android:layout_width="match_parent"
         android:text="user name"
         android:layout_height="50dp"
         android:layout_centerVertical="true"
+        android:layout_toRightOf="@id/userImageView"
         />
     <Button
         android:id="@+id/userItemShareButton"

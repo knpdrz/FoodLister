@@ -7,7 +7,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -70,6 +73,20 @@ class UsersAdapter extends BaseAdapter{
     private void setUsersListData(View view, final User selectedUser){
         TextView listNameTextView = (TextView)view.findViewById(R.id.userItemNameTextView);
         listNameTextView.setText(selectedUser.getName());
+
+        ImageView userImageView = (ImageView)view.findViewById(R.id.userImageView);
+        //based on https://github.com/udacity/and-nd-firebase
+        //set user photo, if they have any
+        boolean photoAvailable = user.getImageUrl() != null;
+        if(photoAvailable){
+            Glide.with(userImageView.getContext())
+                    .load(user.getImageUrl())
+                    .into(userImageView);
+        }else{
+            //user doesn't have a photo, set a default one
+            userImageView.setImageResource(R.drawable.ic_person_black_24dp);
+
+        }
 
         final Button shareButton = view.findViewById(R.id.userItemShareButton);
         shareButton.setOnClickListener(new View.OnClickListener() {

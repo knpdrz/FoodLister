@@ -1,6 +1,7 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -119,14 +121,15 @@ public class ListsActivity extends AppCompatActivity {
                     onSignedOutCleanup();
                    // Create and launch sign-in intent
                     List<AuthUI.IdpConfig> providers = Arrays.asList(
-                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
+                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
 
                     startActivityForResult(
                             AuthUI.getInstance()
                                     .createSignInIntentBuilder()
                                     .setAvailableProviders(providers)
-                                    //todo the logo is not working
                                     .setLogo(R.mipmap.ic_launcher)
+                                    .setIsSmartLockEnabled(false)
                                     .build(),
                             RC_SIGN_IN);
                 }
@@ -277,7 +280,15 @@ public class ListsActivity extends AppCompatActivity {
 
         //add (or update) the user in usersInfo node in Firebase
         usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
-        User user = new User(firebaseUser.getDisplayName(),firebaseUser.getEmail(), firebaseUser.getUid(),null);
+        Uri userPhotoUrl = firebaseUser.getPhotoUrl();
+
+        String userPhotoString = (userPhotoUrl == null) ? null : userPhotoUrl.toString();
+
+        User user = new User(firebaseUser.getDisplayName(),
+                firebaseUser.getEmail(),
+                firebaseUser.getUid(),
+                userPhotoString);
+
         usersInfoDatabase.child(firebaseUser.getUid()).setValue(user);
 
         //get reference to firebase database
