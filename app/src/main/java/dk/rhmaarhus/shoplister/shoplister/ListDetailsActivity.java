@@ -357,6 +357,10 @@ public class ListDetailsActivity extends AppCompatActivity {
         if (requestCode == SETTINGS_REQ_CODE) {
             IdpResponse response = IdpResponse.fromResultIntent(data);
             if (resultCode == RESULT_UNFOLLOW) {
+                //Check if there is noyone left watching the list, then possible to delete it
+                if(friendsIdsList.size() == 0) {
+                    shoppingItemDatabase.removeValue();
+                }
                 //Need to close the list since it's not followed anymore
                 finish();
             }
