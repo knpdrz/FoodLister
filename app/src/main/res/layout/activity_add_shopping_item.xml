@@ -22,7 +22,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="30"
             android:ems="10"
-            android:hint="Find food"
+            android:hint="@string/find_food"
             android:inputType="textPersonName"
             android:textAlignment="center" />
 

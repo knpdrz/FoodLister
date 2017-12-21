@@ -18,4 +18,8 @@
     <string name="action_user">Nánar um notenda</string>
     <string name="action_settings">Stillingar lista</string>
     <string name="log_out">skrá út</string>
+    <string name="message">skilaboð</string>
+    <string name="send">Senda</string>
+    <string name="find_food">Finna hráefni</string>
+    <string name="chat">Spjall</string>
 </resources>

@@ -18,4 +18,8 @@
     <string name="action_user">User details</string>
     <string name="action_settings">List settings</string>
     <string name="log_out">log out</string>
+    <string name="message">message</string>
+    <string name="send">Send</string>
+    <string name="find_food">Find food</string>
+    <string name="chat">Chat</string>
 </resources>

@@ -19,4 +19,8 @@
     <string name="action_user">Bruker detaljer</string>
     <string name="action_settings">List innstillinger</string>
     <string name="log_out">Logg ut</string>
+    <string name="message">skilaboð</string>
+    <string name="send">Send</string>
+    <string name="find_food">Find food</string>
+    <string name="chat">Chat</string>
 </resources>
