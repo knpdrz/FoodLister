@@ -14,6 +14,10 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 import dk.rhmaarhus.shoplister.shoplister.utility.NotificationHelper;
 
@@ -64,7 +68,8 @@ public class NotificationService extends IntentService {
 
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
-                notificationHelper.CreateNotification("NEW LIST", "YOU HAVE BEEN ADDED TO A NEW LIST");
+                ShoppingList list = dataSnapshot.getValue(ShoppingList.class);
+                NotifyUserAboutNewList(list.getName());
             }
 
             @Override
@@ -88,6 +93,16 @@ public class NotificationService extends IntentService {
             }
         };
         usersList.addChildEventListener(usersListListener);
+    }
+
+    private void NotifyUserAboutNewList(String nameOfNewList) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String currentdate = sdf.format(date);
+
+        String notificationText = "You were added to the foodlist " + nameOfNewList + currentdate;
+        notificationHelper.CreateNotification(getResources()
+                .getString(R.string.app_name), notificationText);
     }
 
     private User DeserializeJsonString(String userAsJson) {
