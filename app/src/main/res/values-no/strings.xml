@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FoodLister</string>
+    <string name="newListNamePlaceholder">Handleliste navn</string>
+    <string name="addFriendPlaceholder">Finn venn med email</string>
+    <string name="addFriend">Legg til venn</string>
+    <string name="share">Del</string>
+    <string name="ingredient">Legg til ingrediens</string>
+    <string name="search">Søk</string>
+    <string name="save">Lagre</string>
+    <string name="cancel">Avslutt</string>
+    <string name="clear">Fjern markete elementer</string>
+    <string name="stopFollowing">Slutt å følge denne listen</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nei</string>
+    <string name="settings">Innstillinger</string>
+    <string name="confirmUnfollowWarning">Er du sikker på at du ønsker å slutte å følge denne listen?</string>
+    <string name="shared">Delt!</string>
+    <string name="action_user">Bruker detaljer</string>
+    <string name="action_settings">List innstillinger</string>
+    <string name="log_out">Logg ut</string>
+</resources>
