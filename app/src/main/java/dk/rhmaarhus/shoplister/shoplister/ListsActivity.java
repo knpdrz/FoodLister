@@ -1,6 +1,7 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
@@ -29,6 +30,7 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -56,29 +58,21 @@ public class ListsActivity extends AppCompatActivity {
     private EditText shoppingListEditText;
     private FloatingActionButton addShoppingListBtn;
 
+    //firebase instance variables
     private DatabaseReference userListsDatabase;
     private DatabaseReference usersInfoDatabase;
+    private ChildEventListener listListener;
+    private FirebaseAuth firebaseAuth;
+    private FirebaseAuth.AuthStateListener authStateListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
-        
-        /*//send authentication intent
-        List<AuthUI.IdpConfig> providers = Arrays.asList(
-                new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build());
 
+        //initialize firebase components
+        firebaseAuth = FirebaseAuth.getInstance();
 
-        // Create and launch sign-in intent
-        startActivityForResult(
-                AuthUI.getInstance()
-                        .createSignInIntentBuilder()
-                        .setAvailableProviders(providers)
-                        //todo the logo is not working
-                        .setLogo(R.mipmap.ic_launcher)
-                        .build(),
-                RC_SIGN_IN);
-*/
 
         shoppingListEditText = findViewById(R.id.newListEditText);
 
@@ -114,7 +108,34 @@ public class ListsActivity extends AppCompatActivity {
         //setting up the list view of shopping list
         prepareListView();
 
-        onLogin();
+        //based on https://classroom.udacity.com/courses/ud0352
+        authStateListener = new FirebaseAuth.AuthStateListener() {
+            @Override
+            public void onAuthStateChanged(@NonNull FirebaseAuth firebaseAuth) {
+                FirebaseUser user = firebaseAuth.getCurrentUser();
+                if(user != null){
+                    //user is signed in
+                    onSignedInInitialize(user);
+                }else{
+                    //user is signed out
+                    onSignedOutCleanup();
+                   // Create and launch sign-in intent
+                    List<AuthUI.IdpConfig> providers = Arrays.asList(
+                            new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
+                            new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
+
+                    startActivityForResult(
+                            AuthUI.getInstance()
+                                    .createSignInIntentBuilder()
+                                    .setAvailableProviders(providers)
+                                    .setLogo(R.mipmap.ic_launcher)
+                                    .setIsSmartLockEnabled(false)
+                                    .build(),
+                            RC_SIGN_IN);
+                }
+            }
+        };
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -126,7 +147,8 @@ public class ListsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.action_user:
+            //todo remove this bit?
+            /*case R.id.action_user:
                 Log.d(TAG, "User icon was clicked and should be logged out");
                 //Reference, code taken from https://firebase.google.com/docs/auth/android/firebaseui
                 AuthUI.getInstance()
@@ -136,8 +158,10 @@ public class ListsActivity extends AppCompatActivity {
                                 //todo open login again
                             }
                         });
+                return true;*/
+            case R.id.log_out_menu:
+                AuthUI.getInstance().signOut(this);
                 return true;
-
             default:
                 // If we got here, the user's action was not recognized.
                 // Invoke the superclass to handle it.
@@ -189,7 +213,93 @@ public class ListsActivity extends AppCompatActivity {
 
     //--------------------------------------------------end of list management
 
-   /* @Override
+
+    //call this function to attach a listener to Firebase database
+    //that will listen to changes in lists node
+    private void attachListsListener(){
+        if(listListener == null) {
+            listListener = new ChildEventListener() {
+                @Override
+                public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
+                    ShoppingList shopList = dataSnapshot.getValue(ShoppingList.class);
+                    shoppingLists.add(shopList);
+                    adapter.notifyDataSetChanged();
+                    Log.d(TAG, "onChildAdded: list added to lists list!");
+                }
+
+                @Override
+                public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+                    Log.d(TAG, "onChildChanged: not handled yet");
+                    //Will not happen
+
+                }
+
+                @Override
+                public void onChildRemoved(DataSnapshot dataSnapshot) {
+                    for (ShoppingList list : shoppingLists) {
+                        //todo check, is not working. Are the keys the same?
+                        if (list.getFirebaseKey().equals(dataSnapshot.getKey())) {
+                            shoppingLists.remove(list);
+                        }
+                    }
+                }
+
+                @Override
+                public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+                }
+
+                @Override
+                public void onCancelled(DatabaseError databaseError) {
+                    // Getting lists failed, log a message
+                    Log.w(TAG, "load lists:onCancelled", databaseError.toException());
+                    // ...
+                }
+            };
+
+            userListsDatabase.addChildEventListener(listListener);
+        }
+    }
+
+    private void detachListsListener(){
+        //detach db listener
+        if(listListener != null){
+            userListsDatabase.removeEventListener(listListener);
+            listListener = null;
+        }
+    }
+    private void onSignedOutCleanup() {
+        detachListsListener();
+
+        shoppingLists.clear();
+        adapter.notifyDataSetChanged();
+    }
+
+    private void onSignedInInitialize(FirebaseUser firebaseUser) {
+        //todo enable this
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+
+        //add (or update) the user in usersInfo node in Firebase
+        usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
+        Uri userPhotoUrl = firebaseUser.getPhotoUrl();
+
+        String userPhotoString = (userPhotoUrl == null) ? null : userPhotoUrl.toString();
+
+        User user = new User(firebaseUser.getDisplayName(),
+                firebaseUser.getEmail(),
+                firebaseUser.getUid(),
+                userPhotoString);
+
+        usersInfoDatabase.child(firebaseUser.getUid()).setValue(user);
+
+        //get reference to firebase database
+        userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE +"/"+firebaseUser.getUid()+"/"+LIST_NODE);
+
+        //enabling the reading of lists (to which user has access to)
+        attachListsListener();
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
@@ -200,76 +310,31 @@ public class ListsActivity extends AppCompatActivity {
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
                 Toast.makeText(this, "user logged in! name = " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
-
-                onLogin();
+                onSignedInInitialize(user);
             } else {
                 // Sign in failed, check response for error code
                 // ...
                 Toast.makeText(this, "login fail :<", Toast.LENGTH_SHORT).show();
-
+                finish();
             }
         }
-    }*/
-
-    private void onLogin(){
-        FirebaseUser currentUser = FirebaseAuth.getInstance().getCurrentUser();
-        //todo enable this
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
-        //add (or update) the user in usersInfo node in Firebase
-        usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
-        User user = new User(currentUser.getDisplayName(),currentUser.getEmail(), currentUser.getUid(),null);
-        usersInfoDatabase.child(currentUser.getUid()).setValue(user);
-
-        //get reference to firebase database
-        userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE +"/"+currentUser.getUid()+"/"+LIST_NODE);
-
-        //enabling the reading of lists (to which user has access to)
-        addListsListener();
     }
 
-    //call this function to attach a listener to Firebase database
-    //that will listen to changes in lists node
-    private void addListsListener(){
-        ChildEventListener listListener = new ChildEventListener() {
-            @Override
-            public void onChildAdded(DataSnapshot dataSnapshot, String previousChildName) {
-                ShoppingList shopList = dataSnapshot.getValue(ShoppingList.class);
-                shoppingLists.add(shopList);
-                adapter.notifyDataSetChanged();
-                Log.d(TAG, "onChildAdded: list added to lists list!");
-            }
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(authStateListener != null) {
+            firebaseAuth.removeAuthStateListener(authStateListener);
+        }
+        detachListsListener();
+        shoppingLists.clear();
+        adapter.notifyDataSetChanged();
+    }
 
-            @Override
-            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-                Log.d(TAG, "onChildChanged: not handled yet");
-                //Will not happen
-
-            }
-
-            @Override
-            public void onChildRemoved(DataSnapshot dataSnapshot) {
-                for(ShoppingList list : shoppingLists) {
-                    //todo check, is not working. Are the keys the same?
-                    if(list.getFirebaseKey().equals(dataSnapshot.getKey())) {
-                        shoppingLists.remove(list);
-                    }
-                }
-            }
-
-            @Override
-            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
-
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                // Getting lists failed, log a message
-                Log.w(TAG, "load lists:onCancelled", databaseError.toException());
-                // ...
-            }
-        };
-        userListsDatabase.addChildEventListener(listListener);
+    @Override
+    protected void onResume() {
+        super.onResume();
+        firebaseAuth.addAuthStateListener(authStateListener);
     }
 
 

@@ -1,10 +1,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-<item
+<!--<item
     android:id="@+id/action_user"
     android:icon="@drawable/icon_user"
     android:title="@string/action_user"
     app:showAsAction="always"/>
-
+-->
+    <item
+        android:id="@+id/log_out_menu"
+        android:title="@string/log_out"
+        app:showAsAction="always"/>
 </menu>

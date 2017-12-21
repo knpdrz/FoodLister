@@ -23,7 +23,6 @@
         <ImageView android:id="@+id/friendImageView"
             android:layout_width="40dp"
             android:layout_height="45dp"
-            android:layout_below="@id/friendNameTextView"
             android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 </RelativeLayout>
