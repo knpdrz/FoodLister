@@ -12,12 +12,13 @@ import java.util.Map;
 public class ShoppingList {
     private String name;
     private String firebaseKey;
+    private boolean newlyAdded;
 
     public ShoppingList(){}
 
-    public ShoppingList(String name){
+    public ShoppingList(String name, boolean newlyAdded){
         this.name = name;
-
+        this.newlyAdded = newlyAdded;
     }
 
     public String getFirebaseKey() {
@@ -35,5 +36,9 @@ public class ShoppingList {
     public String getName(){
         return name;
     }
+
+    public boolean getNewlyAdded() {return newlyAdded};
+
+    public void setNewlyAdded(boolean newlyAdded) {this.newlyAdded = newlyAdded; }
 
 }
