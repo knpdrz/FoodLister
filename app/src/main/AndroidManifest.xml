@@ -20,10 +20,12 @@
             </intent-filter>
         </activity>
         <!-- <activity android:name=".ListsActivity" /> -->
-        <activity android:name=".ListDetailsActivity" />
+        <activity android:name=".ListDetailsActivity"
+            android:parentActivityName="dk.rhmaarhus.shoplister.shoplister.ListsActivity" />
         <activity android:name=".ShareActivity" />
         <activity android:name=".AddShoppingItemActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity"
+            android:parentActivityName="dk.rhmaarhus.shoplister.shoplister.ListDetailsActivity" />
         <activity
             android:name=".ChatActivity"
             android:windowSoftInputMode="adjustPan" />

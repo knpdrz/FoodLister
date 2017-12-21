@@ -181,6 +181,10 @@ public class ListDetailsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.list_menu, menu);
+        //Based on https://stackoverflow.com/questions/42849082/how-to-add-a-back-button-to-action-bar-toolbar
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
         return true;
     }
 

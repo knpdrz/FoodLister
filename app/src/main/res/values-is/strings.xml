@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">FoodLister</string>
+    <string name="newListNamePlaceholder">nafn innkaupalista</string>
+    <string name="addFriendPlaceholder">finna vin með netfangi</string>
+    <string name="addFriend">bæta við vin</string>
+    <string name="share">deila</string>
+    <string name="ingredient">Bæta við hlut</string>
+    <string name="search">Leit</string>
+    <string name="save">Vista</string>
+    <string name="cancel">Hætta</string>
+    <string name="clear">Hreinsa merkta hluti</string>
+    <string name="stopFollowing">Hætta að fylgja lista</string>
+    <string name="yes">Já</string>
+    <string name="no">Nei</string>
+    <string name="settings">Stillingar</string>
+    <string name="confirmUnfollowWarning">Ertu viss um að þú viljir hætta að fylgjast með þessum lista?</string>
+    <string name="shared">deilt!</string>
+    <string name="action_user">Nánar um notenda</string>
+    <string name="action_settings">Stillingar lista</string>
+    <string name="log_out">skrá út</string>
+</resources>
