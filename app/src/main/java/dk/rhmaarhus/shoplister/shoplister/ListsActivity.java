@@ -128,6 +128,7 @@ public class ListsActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_user:
                 Log.d(TAG, "User icon was clicked and should be logged out");
+                //Reference, code taken from https://firebase.google.com/docs/auth/android/firebaseui
                 AuthUI.getInstance()
                         .signOut(this)
                         .addOnCompleteListener(new OnCompleteListener<Void>() {
