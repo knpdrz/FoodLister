@@ -37,7 +37,7 @@ public class ShoppingList {
         return name;
     }
 
-    public boolean getNewlyAdded() {return newlyAdded};
+    public boolean getNewlyAdded() {return newlyAdded;};
 
     public void setNewlyAdded(boolean newlyAdded) {this.newlyAdded = newlyAdded; }
 

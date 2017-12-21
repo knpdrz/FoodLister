@@ -29,7 +29,7 @@
             android:windowSoftInputMode="adjustPan" />
 
         <service
-            android:name=".NotificationService"
+            android:name=".service.NotificationService"
             android:exported="false"></service>
     </application>
 

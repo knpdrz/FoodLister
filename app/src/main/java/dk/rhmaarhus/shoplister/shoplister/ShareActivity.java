@@ -114,7 +114,7 @@ public class ShareActivity extends AppCompatActivity {
         listMembersDatabase.child(userToShareWith.getUid()).setValue(userToShareWith.getUid());
 
         //get hold of a list handler of a user that we're trying to share the list with
-        ShoppingList shoppingList = new ShoppingList(shoppingListName);
+        ShoppingList shoppingList = new ShoppingList(shoppingListName, true);
         shoppingList.setFirebaseKey(shoppingListID);
 
         //add list to that added user's lists at usersLists/addedUserID/lists

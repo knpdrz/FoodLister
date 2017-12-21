@@ -1,4 +1,4 @@
-package dk.rhmaarhus.shoplister.shoplister;
+package dk.rhmaarhus.shoplister.shoplister.service;
 
 import android.app.IntentService;
 import android.content.Intent;
@@ -17,6 +17,7 @@ import com.google.gson.Gson;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
+import dk.rhmaarhus.shoplister.shoplister.R;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 import dk.rhmaarhus.shoplister.shoplister.utility.NotificationHelper;
@@ -69,7 +70,12 @@ public class NotificationService extends IntentService {
             @Override
             public void onChildAdded(DataSnapshot dataSnapshot, String s) {
                 ShoppingList list = dataSnapshot.getValue(ShoppingList.class);
-                NotifyUserAboutNewList(list.getName());
+                if(list.getNewlyAdded()) {
+                    NotifyUserAboutNewList(list.getName());
+                    list.setNewlyAdded(false);
+                    usersList.child(list.getFirebaseKey()).setValue(list);
+                }
+
             }
 
             @Override
@@ -123,7 +129,7 @@ public class NotificationService extends IntentService {
     }
 
     public class LocalBinder extends Binder {
-        NotificationService getService(){
+        public NotificationService getService(){
             return NotificationService.this;
         }
     }

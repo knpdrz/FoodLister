@@ -37,6 +37,7 @@ import java.util.List;
 
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
+import dk.rhmaarhus.shoplister.shoplister.service.NotificationService;
 
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_DETAILS_REQ_CODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
@@ -212,7 +213,8 @@ public class ListsActivity extends AppCompatActivity {
     }
 
     private void addShoppingList(String listName, User user){
-        ShoppingList shopList = new ShoppingList(listName);
+        //Making newlyAdded as false since we don't need to be notified about this new list
+        ShoppingList shopList = new ShoppingList(listName, false);
         Log.d(TAG, "addShoppingList: adding "+listName + " owned by " + user.getName());
 
         shopList.setFirebaseKey(userListsDatabase.push().getKey());
