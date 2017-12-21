@@ -8,7 +8,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
@@ -24,15 +23,16 @@ import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.CHAT_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 
 public class ChatActivity extends AppCompatActivity {
-    private static final int RC_SIGN_IN = 123;
     private Button sendBtn;
     private EditText message;
     private ListView chatView;
-    private FirebaseListAdapter<ChatMessage> adapter;
+
     private DatabaseReference chatDatabase;
+
     private String shoppingListID;
-    private String shoppingListName;
+
     private ChatAdapter chatAdapter;
+
     private ArrayList<ChatMessage> messages;
 
     @Override
@@ -74,10 +74,6 @@ public class ChatActivity extends AppCompatActivity {
         chatAdapter = new ChatAdapter(this, messages);
         chatView = findViewById(R.id.chatView);
         chatView.setAdapter(chatAdapter);
-    }
-
-    private void displayChatMessages(){
-
     }
 
     private void addChatListener() {

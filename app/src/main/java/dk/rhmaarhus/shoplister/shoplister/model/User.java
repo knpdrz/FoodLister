@@ -1,12 +1,12 @@
 package dk.rhmaarhus.shoplister.shoplister.model;
 
-import java.net.URI;
+import java.io.Serializable;
 
 /**
  * Created by Moon on 30.11.2017.
  */
 
-public class User {
+public class User implements Serializable {
     private String name;
     private String email;
     private String imageUrl;

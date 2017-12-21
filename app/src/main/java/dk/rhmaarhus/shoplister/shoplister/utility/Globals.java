@@ -29,9 +29,13 @@ public class Globals {
     public static final String CHAT_NODE = "chat";
     public static final String EMAIL_NODE = "email";
 
-
     //network
     public static final String CONNECT = "CONNECTIVITY";
+
+    //notifications
+    public static final String NOTIFICATION_CHANNEL_ID = "HRM_FOODLISTER_ID";
+    public static final String NOTIFICATION_CHANNEL_NAME = "HRM_FOODLISTER_APP";
+    public static final int UNIQUE_NOTIFICATION_ID = 1991;
 
 
 
