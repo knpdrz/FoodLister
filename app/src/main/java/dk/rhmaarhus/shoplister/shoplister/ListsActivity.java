@@ -1,27 +1,27 @@
 package dk.rhmaarhus.shoplister.shoplister;
 
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.IdpResponse;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.ChildEventListener;
@@ -29,8 +29,8 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.gson.Gson;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -65,6 +65,10 @@ public class ListsActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseAuth.AuthStateListener authStateListener;
 
+    //service
+    private NotificationService notificationService;
+    private boolean mBound = false;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -72,7 +76,6 @@ public class ListsActivity extends AppCompatActivity {
 
         //initialize firebase components
         firebaseAuth = FirebaseAuth.getInstance();
-
 
         shoppingListEditText = findViewById(R.id.newListEditText);
 
@@ -136,7 +139,45 @@ public class ListsActivity extends AppCompatActivity {
             }
         };
 
+        //starting notification service
+        Intent serviceIntent = new Intent(getApplicationContext(), NotificationService.class);
+        FirebaseUser fbUser = firebaseAuth.getInstance().getCurrentUser();
+
+        if(fbUser != null) {
+            User currentUser = new User(fbUser.getDisplayName(), fbUser.getEmail(), fbUser.getUid(), null);
+
+            String UserAsJson = SerializeUserObject(currentUser);
+
+            serviceIntent.putExtra("user", UserAsJson);
+            startService(serviceIntent);
+
+            bindService(serviceIntent, mConnection, Context.BIND_AUTO_CREATE);
+        }
+
     }
+
+    private String SerializeUserObject(User currentUser) {
+        Gson gson = new Gson();
+        String userAsJson = gson.toJson(currentUser);
+
+        return userAsJson;
+    }
+
+    private ServiceConnection mConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            NotificationService.LocalBinder binder = (NotificationService.LocalBinder)iBinder;
+
+            notificationService = binder.getService();
+
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            mBound = false;
+        }
+    };
 
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
@@ -336,5 +377,12 @@ public class ListsActivity extends AppCompatActivity {
         firebaseAuth.addAuthStateListener(authStateListener);
     }
 
+    @Override
+    protected void onDestroy() {
+        if(mConnection != null && mBound){
+            unbindService(mConnection);
+        }
+        super.onDestroy();
 
+    }
 }
