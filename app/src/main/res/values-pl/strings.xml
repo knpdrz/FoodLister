@@ -26,4 +26,7 @@
     <string name="addedToShoppingList">został dodany do listy zakupów</string>
     <string name="action_user">szczegóły użytkownika</string>
     <string name="action_settings">ustawienia listy</string>
+    <string name="wroteMessage">napisał wiadomość</string>
+    <string name="yes">tak</string>
+    <string name="youWereAdded">zostałeś dodany do listy</string>
 </resources>
