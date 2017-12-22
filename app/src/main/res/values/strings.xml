@@ -22,4 +22,10 @@
     <string name="send">Send</string>
     <string name="find_food">Find food</string>
     <string name="chat">Chat</string>
+    <string name="addedToShoppingList">was added to the shopping list</string>
+    <string name="changesToAShoppingList">There have been made changes to the shopping list</string>
+    <string name="removedFromShoppingList">was removed from the shopping list</string>
+    <string name="youWereAdded">You were added to the foodlist</string>
+    <string name="wroteMessage">wrote a message in the</string>
+    <string name="at">at</string>
 </resources>

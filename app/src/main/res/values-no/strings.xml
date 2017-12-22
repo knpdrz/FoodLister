@@ -23,4 +23,10 @@
     <string name="send">Send</string>
     <string name="find_food">Finn mat</string>
     <string name="chat">Chat</string>
+    <string name="addedToShoppingList">ble lagt til handlelisten</string>
+    <string name="changesToAShoppingList">Det har blitt gjort endringer i handlelisten</string>
+    <string name="removedFromShoppingList">ble fjernet fra handlelisten</string>
+    <string name="youWereAdded">Du ble lagt til handlelisten</string>
+    <string name="wroteMessage">Skrev en melding i</string>
+    <string name="at">klukkan</string>
 </resources>

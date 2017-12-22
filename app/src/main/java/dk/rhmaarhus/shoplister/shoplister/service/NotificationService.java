@@ -133,6 +133,7 @@ public class NotificationService extends IntentService {
                 ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
                 if (item.getNewlyAdded() && currentUser != item.getUid()){
                     item.setNewlyAdded(false);
+                    itemListener.child(item.getName()).setValue(item);
                     String listname = itemListeners.get(itemListener);
                     NotifyUserAboutItemsInShoppingList(item.getName(), listname, "Add");
                 }
@@ -178,13 +179,13 @@ public class NotificationService extends IntentService {
 
         switch (type){
             case "Add":
-                notificationText = itemname + " was added to the shopping list " + listname + " at " + currentdate;
+                notificationText = itemname + " " + R.string.addedToShoppingList + " " + listname + " " + R.string.at + " " + currentdate;
                 break;
             case "Change":
-                notificationText = "There have been made changes to the shopping list " + listname + " at " + currentdate;
+                notificationText = R.string.changesToAShoppingList  + " " + listname + " " + R.string.at + " " + currentdate;
                 break;
             case "Remove":
-                notificationText = itemname + " was removed from the shopping list " + listname + " at " + currentdate;
+                notificationText = itemname + " " + R.string.removedFromShoppingList + " " + listname + " " + R.string.at + " " + currentdate;
                 break;
         }
 
@@ -197,7 +198,7 @@ public class NotificationService extends IntentService {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String currentdate = sdf.format(date);
 
-        String notificationText = "You were added to the foodlist " + nameOfNewList + " " +  currentdate;
+        String notificationText = R.string.youWereAdded + " " + nameOfNewList + " " +  currentdate;
         notificationHelper.CreateNotification(getResources()
                 .getString(R.string.app_name), notificationText);
     }
@@ -250,7 +251,7 @@ public class NotificationService extends IntentService {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String currentdate = sdf.format(date);
 
-        String notificationText = user + " wrote a message in the " + listname + " chat at " + currentdate;
+        String notificationText = user + " " + R.string.wroteMessage + " " + listname + " " + R.string.chat + " " + R.string.at + " " + currentdate;
         notificationHelper.CreateNotification(getResources()
                 .getString(R.string.app_name), notificationText);
     }
