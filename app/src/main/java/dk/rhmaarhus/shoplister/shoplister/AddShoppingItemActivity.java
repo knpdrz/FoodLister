@@ -69,6 +69,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
 
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
 
+        //Make a request to the Food API to find items every time a key is pressed
         searchField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -108,9 +109,12 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
                 finish();
             }
         });
+
         foodList = new ArrayList<Food>();
         prepareListView();
 
+        //When an item from the list(returned from the API) is clicked it is added to a temporary list
+        //which will be added to the database if the user presses save
         foodListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {

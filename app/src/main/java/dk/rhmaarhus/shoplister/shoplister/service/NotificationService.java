@@ -215,6 +215,7 @@ public class NotificationService extends IntentService {
                 ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
                 if (message.getNewlyAdded() && currentUser != message.getUid()){
                     message.setNewlyAdded(false);
+                    chatListener.child(dataSnapshot.getKey()).setValue(message);
                     String listname = chatListeners.get(chatListener);
                     NotifyUserAboutNewChatMessage(message.getUser(), listname);
                 }
