@@ -17,11 +17,15 @@ public class ChatMessage {
     private String message;
     private String user;
     private String messageTime;
+    private String uid;
+    private boolean newlyAdded;
 
-    public ChatMessage(String chatMessage, String chatUser){
+    public ChatMessage(String chatMessage, String chatUser, String uid, boolean newlyAdded){
         message = chatMessage;
         user = TrimUsername(chatUser);
         messageTime = GetGMTTime();
+        this.uid = uid;
+        this.newlyAdded = newlyAdded;
 
         TrimUsername(user);
     }
@@ -85,5 +89,15 @@ public class ChatMessage {
         }
     }
 
+    public boolean getNewlyAdded() {return newlyAdded;};
 
+    public void setNewlyAdded(boolean newlyAdded) {this.newlyAdded = newlyAdded; }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid){
+        this.uid = uid;
+    }
 }

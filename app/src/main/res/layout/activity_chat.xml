@@ -28,18 +28,19 @@
         <EditText
             android:id="@+id/newMessageTextView"
             android:layout_width="0dp"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_weight="30"
             android:ems="10"
             android:hint="@string/message"
             android:textAlignment="center" />
 
-        <Button
+        <android.support.design.widget.FloatingActionButton
             android:id="@+id/sendMessageBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/send" />
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:src="@android:drawable/ic_menu_send" />
 
     </LinearLayout>
 
