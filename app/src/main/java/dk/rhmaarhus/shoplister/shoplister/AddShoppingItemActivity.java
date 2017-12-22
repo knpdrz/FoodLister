@@ -5,6 +5,9 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -31,7 +34,7 @@ import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_
 
 public class AddShoppingItemActivity extends AppCompatActivity implements Observer {
 
-    private Button searchBtn, saveItemsBtn, cancelItemsBtn;
+    private Button saveItemsBtn, cancelItemsBtn;
     private ListView foodListView;
     private EditText searchField;
     private Subject foodSubject;
@@ -49,7 +52,6 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_shopping_item);
         foodFetcher = new FoodFetcher(this);
-        searchBtn = findViewById(R.id.searchItemBtn);
         saveItemsBtn = findViewById(R.id.saveItemsBtn);
         cancelItemsBtn = findViewById(R.id.cancelItemsBtn);
         searchField = findViewById(R.id.findFoodText);
@@ -63,15 +65,27 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
 
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
 
-        searchBtn.setOnClickListener(new View.OnClickListener() {
+        searchField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void onClick(View view) {
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
                 String food = searchField.getText().toString();
+
                 if (food == null){
                     return;
                 }
 
                 searchForFood(food, foodFetcher);
+                Log.d("FoodList", "afterTextChanged");
             }
         });
 
@@ -145,7 +159,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
     public void update(Food[] foodArray) {
         Food[] food = foodArray;
         foodList = new ArrayList<Food>(Arrays.asList(food));
-        AddFoodToLists(foodList);
+        addFoodToLists(foodList);
     }
 
     private void prepareListView(){
@@ -154,7 +168,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         foodListView.setAdapter(adapter);
     }
 
-    private void AddFoodToLists(ArrayList<Food> foods){
+    private void addFoodToLists(ArrayList<Food> foods){
         listOfFoods.clear();
         hasBeenClicked.clear();
         for (Food food : foods){

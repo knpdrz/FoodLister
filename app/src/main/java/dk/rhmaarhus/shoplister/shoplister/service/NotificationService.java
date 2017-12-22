@@ -106,7 +106,7 @@ public class NotificationService extends IntentService {
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
         String currentdate = sdf.format(date);
 
-        String notificationText = "You were added to the foodlist " + nameOfNewList + currentdate;
+        String notificationText = "You were added to the foodlist " + nameOfNewList + " " +  currentdate;
         notificationHelper.CreateNotification(getResources()
                 .getString(R.string.app_name), notificationText);
     }

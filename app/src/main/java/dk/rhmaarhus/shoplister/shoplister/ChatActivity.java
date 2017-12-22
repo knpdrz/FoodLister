@@ -2,9 +2,9 @@ package dk.rhmaarhus.shoplister.shoplister;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 
@@ -23,7 +23,7 @@ import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.CHAT_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_ID;
 
 public class ChatActivity extends AppCompatActivity {
-    private Button sendBtn;
+    private FloatingActionButton sendBtn;
     private EditText message;
     private ListView chatView;
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:app="http://schemas.android.com/apk/res-auto"
+<RelativeLayout xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
@@ -9,12 +9,10 @@
     >
 
     <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout1"
         android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        android:paddingTop="10dp"
-        >
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <EditText
             android:id="@+id/findFoodText"
@@ -23,46 +21,40 @@
             android:layout_weight="30"
             android:ems="10"
             android:hint="@string/find_food"
-            android:inputType="textPersonName"
             android:textAlignment="center" />
-
-        <Button
-            android:id="@+id/searchItemBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/search_go" />
-
     </LinearLayout>
 
     <ListView
         android:id="@+id/searchFoodList"
         android:layout_width="wrap_content"
-        android:layout_height="320dp" />
+        android:layout_height="350dp"
+        android:layout_above="@+id/linearLayout2"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/linearLayout1"
+        android:transcriptMode="alwaysScroll" />
 
     <LinearLayout
-        android:id="@+id/linearLayout3"
-        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout2"
         android:layout_width="fill_parent"
-        android:orientation="horizontal"
-        >
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
 
         <Button
             android:id="@+id/cancelItemsBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@android:string/cancel" />
+            android:layout_weight="30"
+            android:text="@string/cancel" />
 
         <Button
             android:id="@+id/saveItemsBtn"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_weight="30"
             android:text="@string/save" />
-
-
 
     </LinearLayout>
 
-</LinearLayout>
+</RelativeLayout>
