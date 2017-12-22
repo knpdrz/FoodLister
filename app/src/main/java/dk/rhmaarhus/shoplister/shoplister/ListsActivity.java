@@ -75,7 +75,7 @@ public class ListsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
+        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         //initialize firebase components
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -210,6 +210,8 @@ public class ListsActivity extends AppCompatActivity {
         shopList.setFirebaseKey(userListsDatabase.push().getKey());
         userListsDatabase.child(shopList.getFirebaseKey()).setValue(shopList);
         shoppingListEditText.getText().clear();
+
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //add user to listMembers node in firebase database
         FirebaseDatabase
