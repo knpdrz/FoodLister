@@ -34,8 +34,10 @@ public class FoodFetcher implements Subject {
     private String MashapeHostValue = "spoonacular-recipe-food-nutrition-v1.p.mashape.com"; //Header Value
     private RequestQueue queue;
     private ArrayList<Observer> observers;
+    private Context context;
 
     public FoodFetcher(Context context){
+        this.context = context;
         queue = Volley.newRequestQueue(context);
         observers = new ArrayList<>();
     }
@@ -47,11 +49,11 @@ public class FoodFetcher implements Subject {
     private void RequestFoodFromAPI(String food) {
         String foodUrl = APIUrl + food;
 
-        //missing context 
-        /*if(!CheckNetworkConnection.isDeviceConnected() {
+        if(!CheckNetworkConnection.isDeviceConnected(context)) {
+            Log.d(TAG, "There is no connection");
             errorNotified();
             return;
-        }*/
+        }
 
         StringRequest stringRequest = new StringRequest(Request.Method.GET, foodUrl,
                 new Response.Listener<String>() {
@@ -88,7 +90,7 @@ public class FoodFetcher implements Subject {
     private void errorNotified() {
         Food[] food = new Food[1];
         Food item = new Food();
-        item.Name = "An error occured when fetching items";
+        item.Name = "An error occured while fetching items";
         food[0] = item;
         notifyObserver(food);
     }
