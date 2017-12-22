@@ -211,7 +211,6 @@ public class ListsActivity extends AppCompatActivity {
         userListsDatabase.child(shopList.getFirebaseKey()).setValue(shopList);
         shoppingListEditText.getText().clear();
 
-        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
 
         //add user to listMembers node in firebase database
         FirebaseDatabase
