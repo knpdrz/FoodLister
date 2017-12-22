@@ -75,7 +75,6 @@ public class ListsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
 
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         //initialize firebase components
         firebaseAuth = FirebaseAuth.getInstance();
 
