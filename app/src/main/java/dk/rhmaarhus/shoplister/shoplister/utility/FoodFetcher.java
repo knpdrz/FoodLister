@@ -1,6 +1,7 @@
 package dk.rhmaarhus.shoplister.shoplister.utility;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -16,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 import dk.rhmaarhus.shoplister.shoplister.model.Food;
+
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.TAG;
 
 /**
  * Created by rjkey on 30-11-2017.
@@ -44,6 +47,12 @@ public class FoodFetcher implements Subject {
     private void RequestFoodFromAPI(String food) {
         String foodUrl = APIUrl + food;
 
+        //missing context 
+        /*if(!CheckNetworkConnection.isDeviceConnected() {
+            errorNotified();
+            return;
+        }*/
+
         StringRequest stringRequest = new StringRequest(Request.Method.GET, foodUrl,
                 new Response.Listener<String>() {
             @Override
@@ -54,13 +63,15 @@ public class FoodFetcher implements Subject {
                     notifyObserver(food);
                 }
                 else{
-                    //SHIT! Food is null!!
+                    //food is null
+                    Log.d(TAG, "Food returned null");
                 }
             }
         },new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                //Handle error
+                Log.d(TAG, "Food request returned an error");
+                errorNotified();
             }
         }){
             //https://stackoverflow.com/questions/17049473/how-to-set-custom-header-in-volley-request
@@ -73,6 +84,13 @@ public class FoodFetcher implements Subject {
             }
         };
         queue.add(stringRequest);
+    }
+    private void errorNotified() {
+        Food[] food = new Food[1];
+        Food item = new Food();
+        item.Name = "An error occured when fetching items";
+        food[0] = item;
+        notifyObserver(food);
     }
 
     private Food[] ParseJsonToFood(String jsonString){

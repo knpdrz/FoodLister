@@ -123,7 +123,7 @@ public class ListsActivity extends AppCompatActivity {
                 }else{
                     //user is signed out
                     onSignedOutCleanup();
-                   // Create and launch sign-in intent
+                   // Create and launch sign-in intent but only if there is internet connectivity
                     List<AuthUI.IdpConfig> providers = Arrays.asList(
                             new AuthUI.IdpConfig.Builder(AuthUI.EMAIL_PROVIDER).build(),
                             new AuthUI.IdpConfig.Builder(AuthUI.GOOGLE_PROVIDER).build());
@@ -190,18 +190,6 @@ public class ListsActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            //todo remove this bit?
-            /*case R.id.action_user:
-                Log.d(TAG, "User icon was clicked and should be logged out");
-                //Reference, code taken from https://firebase.google.com/docs/auth/android/firebaseui
-                AuthUI.getInstance()
-                        .signOut(this)
-                        .addOnCompleteListener(new OnCompleteListener<Void>() {
-                            public void onComplete(@NonNull Task<Void> task) {
-                                //todo open login again
-                            }
-                        });
-                return true;*/
             case R.id.log_out_menu:
                 AuthUI.getInstance().signOut(this);
                 return true;
@@ -352,13 +340,13 @@ public class ListsActivity extends AppCompatActivity {
             if (resultCode == RESULT_OK) {
                 // Successfully signed in
                 FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Toast.makeText(this, "user logged in! name = " + user.getEmail(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "user logged in! name = " + user.getEmail(), Toast.LENGTH_SHORT).show();
 
                 onSignedInInitialize(user);
             } else {
                 // Sign in failed, check response for error code
                 // ...
-                Toast.makeText(this, "login fail :<", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "login fail :<", Toast.LENGTH_SHORT).show();
                 finish();
             }
         }
