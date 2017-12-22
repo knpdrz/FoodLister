@@ -64,10 +64,14 @@ public class NotificationService extends IntentService {
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
         currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
-        Bundle bundle = intent.getExtras();
-        if (bundle!=null){
-            String userAsJson = (String)bundle.get("user");
-            user = DeserializeJsonString(userAsJson);
+        if(intent != null) {
+            Bundle bundle = intent.getExtras();
+            if (bundle != null) {
+                String userAsJson = (String) bundle.get("user");
+                user = DeserializeJsonString(userAsJson);
+            }else{
+                return START_NOT_STICKY;
+            }
         }
         else {
             return START_NOT_STICKY;
