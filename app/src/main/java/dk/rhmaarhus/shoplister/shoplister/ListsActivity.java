@@ -270,7 +270,6 @@ public class ListsActivity extends AppCompatActivity {
                 @Override
                 public void onChildRemoved(DataSnapshot dataSnapshot) {
                     for (ShoppingList list : shoppingLists) {
-                        //todo check, is not working. Are the keys the same?
                         if (list.getFirebaseKey().equals(dataSnapshot.getKey())) {
                             shoppingLists.remove(list);
                         }

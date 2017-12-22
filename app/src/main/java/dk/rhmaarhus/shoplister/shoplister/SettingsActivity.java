@@ -66,7 +66,6 @@ public class SettingsActivity extends AppCompatActivity {
                             listMembersDatabase = FirebaseDatabase.getInstance().getReference(LIST_MEMBERS_NODE + "/" + shoppingListID + "/" + firebaseUser.getUid());
                             userListsDatabase = FirebaseDatabase.getInstance().getReference(USERS_LISTS_NODE + "/" + firebaseUser.getUid() + "/" + LIST_NODE + "/" + shoppingListID);
                             userListsDatabase.removeValue();
-                            //todo if this is the only user following the list, delete all ingredients after unfollowing
                             listMembersDatabase.removeValue();
                             setResult(RESULT_UNFOLLOW);
                             finish();

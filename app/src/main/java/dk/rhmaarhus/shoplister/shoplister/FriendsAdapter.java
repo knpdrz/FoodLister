@@ -43,7 +43,6 @@ public class FriendsAdapter extends RecyclerView.Adapter<FriendsAdapter.ViewHold
         // create a new view
         View v = (View) LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.friend_item_view, parent, false);
-        //todo set view's size, margins, paddings and layout params here if needed
         ViewHolder vh = new ViewHolder(v);
         return vh;
     }

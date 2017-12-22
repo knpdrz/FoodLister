@@ -77,7 +77,6 @@ public class ListDetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_list_details);
 
-        //Display the back arrow todo??
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         clearBtn = findViewById(R.id.clearBtn);
