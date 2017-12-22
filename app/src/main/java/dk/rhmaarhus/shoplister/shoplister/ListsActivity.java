@@ -184,7 +184,6 @@ public class ListsActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.main_menu, menu);
-
         return true;
     }
 
@@ -311,7 +310,7 @@ public class ListsActivity extends AppCompatActivity {
         //add (or update) the user in usersInfo node in Firebase
         usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
         Uri userPhotoUrl = firebaseUser.getPhotoUrl();
-
+        getSupportActionBar().setTitle(getText(R.string.app_name) + " " + firebaseUser.getEmail());
         String userPhotoString = (userPhotoUrl == null) ? null : userPhotoUrl.toString();
 
         User user = new User(firebaseUser.getDisplayName(),

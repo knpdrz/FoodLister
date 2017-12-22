@@ -59,6 +59,9 @@ public class ShareActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_share);
 
+        //Able the up button
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
         findUserEditText = findViewById(R.id.searchForUserEditText);
 
         addUserButton = findViewById(R.id.searchForUserButton);
