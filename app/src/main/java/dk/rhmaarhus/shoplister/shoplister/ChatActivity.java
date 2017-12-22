@@ -56,7 +56,7 @@ public class ChatActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 ChatMessage chatMessage = new ChatMessage(message.getText().toString(),
-                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName());
+                        FirebaseAuth.getInstance().getCurrentUser().getDisplayName(), FirebaseAuth.getInstance().getCurrentUser().getUid(), true);
                 String key = String.valueOf(chatMessage.getMessageTime()+FirebaseAuth.getInstance().getCurrentUser().getUid());
                 chatDatabase.child(key).setValue(chatMessage);
                 message.setText("");

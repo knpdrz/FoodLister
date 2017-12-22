@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.support.annotation.Nullable;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -15,14 +16,21 @@ import com.google.firebase.database.FirebaseDatabase;
 import com.google.gson.Gson;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 import dk.rhmaarhus.shoplister.shoplister.R;
+import dk.rhmaarhus.shoplister.shoplister.model.ChatMessage;
+import dk.rhmaarhus.shoplister.shoplister.model.ShoppingItem;
 import dk.rhmaarhus.shoplister.shoplister.model.ShoppingList;
 import dk.rhmaarhus.shoplister.shoplister.model.User;
 import dk.rhmaarhus.shoplister.shoplister.utility.NotificationHelper;
 
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.CHAT_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.LIST_NODE;
+import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.SHOPPING_ITEMS_NODE;
 import static dk.rhmaarhus.shoplister.shoplister.utility.Globals.USERS_LISTS_NODE;
 
 /**
@@ -35,6 +43,10 @@ public class NotificationService extends IntentService {
     private NotificationHelper notificationHelper;
     private final IBinder mBinder = new LocalBinder();
     private User user;
+    private ArrayList<String> listsToTrack;
+    private Map<DatabaseReference, String> chatListeners;
+    private Map<DatabaseReference, String> itemListeners;
+    private String currentUser;
 
     public NotificationService(){
         super("NotificationService");
@@ -44,10 +56,14 @@ public class NotificationService extends IntentService {
     public void onCreate() {
         super.onCreate();
         notificationHelper = new NotificationHelper(this);
+        listsToTrack = new ArrayList<String>();
+        chatListeners = new HashMap<DatabaseReference, String>();
+        itemListeners = new HashMap<DatabaseReference, String>();
     }
 
     @Override
     public int onStartCommand(@Nullable Intent intent, int flags, int startId) {
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
         Bundle bundle = intent.getExtras();
         if (bundle!=null){
             String userAsJson = (String)bundle.get("user");
@@ -75,7 +91,10 @@ public class NotificationService extends IntentService {
                     list.setNewlyAdded(false);
                     usersList.child(list.getFirebaseKey()).setValue(list);
                 }
+                listsToTrack.add(list.getFirebaseKey());
 
+                CreateChatChildListenerForShoppingList(list.getFirebaseKey(), list.getName());
+                CreateShoppingItemListenerForShoppingList(list.getFirebaseKey(), list.getName());
             }
 
             @Override
@@ -101,6 +120,78 @@ public class NotificationService extends IntentService {
         usersList.addChildEventListener(usersListListener);
     }
 
+    private void CreateShoppingItemListenerForShoppingList(String firebaseKey, String name) {
+        DatabaseReference itemListener = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + firebaseKey);
+        addItemListener(itemListener);
+        itemListeners.put(itemListener, name);
+    }
+
+    private void addItemListener(final DatabaseReference itemListener) {
+        ChildEventListener itemEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+                if (item.getNewlyAdded() && currentUser != item.getUid()){
+                    item.setNewlyAdded(false);
+                    String listname = itemListeners.get(itemListener);
+                    NotifyUserAboutItemsInShoppingList(item.getName(), listname, "Add");
+                }
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+                if (currentUser != item.getUid()){
+                    String listname = itemListeners.get(itemListener);
+                    NotifyUserAboutItemsInShoppingList(item.getName(), listname, "Change");
+                }
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+                ShoppingItem item = dataSnapshot.getValue(ShoppingItem.class);
+                if (currentUser != item.getUid()){
+                    String listname = itemListeners.get(itemListener);
+                    NotifyUserAboutItemsInShoppingList(item.getName(), listname, "Remove");
+                }
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        itemListener.addChildEventListener(itemEventListener);
+    }
+
+    private void NotifyUserAboutItemsInShoppingList(String itemname, String listname, String type) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String currentdate = sdf.format(date);
+        String notificationText="";
+
+        switch (type){
+            case "Add":
+                notificationText = itemname + " was added to the shopping list " + listname + " at " + currentdate;
+                break;
+            case "Change":
+                notificationText = "There have been made changes to the shopping list " + listname + " at " + currentdate;
+                break;
+            case "Remove":
+                notificationText = itemname + " was removed from the shopping list " + listname + " at " + currentdate;
+                break;
+        }
+
+        notificationHelper.CreateNotification(getResources()
+                .getString(R.string.app_name), notificationText);
+    }
+
     private void NotifyUserAboutNewList(String nameOfNewList) {
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
@@ -110,6 +201,59 @@ public class NotificationService extends IntentService {
         notificationHelper.CreateNotification(getResources()
                 .getString(R.string.app_name), notificationText);
     }
+
+    private void CreateChatChildListenerForShoppingList(String firebaseKey, String listname) {
+        DatabaseReference chatListener = FirebaseDatabase.getInstance().getReference(CHAT_NODE + "/" + firebaseKey);
+        addChatListener(chatListener);
+        chatListeners.put(chatListener, listname);
+    }
+
+    private void addChatListener(final DatabaseReference chatListener) {
+        ChildEventListener chatEventListener = new ChildEventListener() {
+            @Override
+            public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+                ChatMessage message = dataSnapshot.getValue(ChatMessage.class);
+                if (message.getNewlyAdded() && currentUser != message.getUid()){
+                    message.setNewlyAdded(false);
+                    String listname = chatListeners.get(chatListener);
+                    NotifyUserAboutNewChatMessage(message.getUser(), listname);
+                }
+
+            }
+
+            @Override
+            public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onChildRemoved(DataSnapshot dataSnapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        };
+        chatListener.addChildEventListener(chatEventListener);
+    }
+
+    private void NotifyUserAboutNewChatMessage(String user, String listname) {
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+        String currentdate = sdf.format(date);
+
+        String notificationText = user + " wrote a message in the " + listname + " chat at " + currentdate;
+        notificationHelper.CreateNotification(getResources()
+                .getString(R.string.app_name), notificationText);
+    }
+
 
     private User DeserializeJsonString(String userAsJson) {
         Gson gson = new Gson();

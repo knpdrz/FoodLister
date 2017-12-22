@@ -15,6 +15,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
@@ -46,6 +47,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
     private Map<String, Boolean> hasBeenClicked;
     private String shoppingListID;
     private DatabaseReference shoppingItemDatabase;
+    private String currentUser;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +64,8 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
         //get data from previous activity (list id)
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
+
+        currentUser = FirebaseAuth.getInstance().getCurrentUser().getUid();
 
         shoppingItemDatabase = FirebaseDatabase.getInstance().getReference(SHOPPING_ITEMS_NODE + "/" + shoppingListID);
 
@@ -115,7 +119,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
 
                 click(name, listNameTextView);
 
-                ShoppingItem item = new ShoppingItem(name);
+                ShoppingItem item = new ShoppingItem(name, true, currentUser);
                 itemToShoppingList.add(item);
             }
 
@@ -125,7 +129,7 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
     //saving selected items to the database
     private void saveSelectedItems() {
         for(ShoppingItem shoppingItem : itemToShoppingList) {
-            shoppingItemDatabase.child(shoppingItem.getName()).setValue(new ShoppingItem(shoppingItem.getName()));
+            shoppingItemDatabase.child(shoppingItem.getName()).setValue(new ShoppingItem(shoppingItem.getName(), true, currentUser));
         }
     }
 
@@ -136,14 +140,14 @@ public class AddShoppingItemActivity extends AppCompatActivity implements Observ
             hasBeenClicked.put(name, false);
             listNameTextView.setBackgroundColor(Color.parseColor("#FFFFFF"));
 
-            ShoppingItem item = new ShoppingItem(name);
+            ShoppingItem item = new ShoppingItem(name, true, currentUser);
             itemToShoppingList.remove(item);
         }
         else{
             hasBeenClicked.put(name, true);
             listNameTextView.setBackgroundColor(R.color.colorAccent);
 
-            ShoppingItem item = new ShoppingItem(name);
+            ShoppingItem item = new ShoppingItem(name, true, currentUser);
             itemToShoppingList.add(item);
         }
     }
