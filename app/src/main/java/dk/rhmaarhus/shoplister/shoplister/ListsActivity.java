@@ -75,6 +75,7 @@ public class ListsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lists);
 
+        FirebaseDatabase.getInstance().setPersistenceEnabled(true);
         //initialize firebase components
         firebaseAuth = FirebaseAuth.getInstance();
 
@@ -308,9 +309,6 @@ public class ListsActivity extends AppCompatActivity {
     }
 
     private void onSignedInInitialize(FirebaseUser firebaseUser) {
-        //todo enable this
-        //FirebaseDatabase.getInstance().setPersistenceEnabled(true);
-
         //add (or update) the user in usersInfo node in Firebase
         usersInfoDatabase = FirebaseDatabase.getInstance().getReference(USER_INFO_NODE);
         Uri userPhotoUrl = firebaseUser.getPhotoUrl();
