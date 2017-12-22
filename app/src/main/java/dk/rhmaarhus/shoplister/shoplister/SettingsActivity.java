@@ -38,9 +38,6 @@ public class SettingsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_settings);
 
-        //Able the up button
-        getSupportActionBar().setDisplayShowHomeEnabled(true);
-
         Intent parentIntent = getIntent();
         shoppingListID = parentIntent.getStringExtra(LIST_ID);
         shoppingListName = parentIntent.getStringExtra(LIST_NAME);
