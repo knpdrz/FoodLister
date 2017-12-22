@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">FoodLister</string>
+    <string name="stopFollowing">Przestań obserwować listę</string>
+    <string name="shared">udostępniono!</string>
+    <string name="share">udostępnij</string>
+    <string name="settings">ustawienia</string>
+    <string name="send">wyślij</string>
+    <string name="search">szukaj</string>
+    <string name="save">zapisz</string>
+    <string name="removedFromShoppingList">został usunięty z listy zakupów</string>
+    <string name="no">nie</string>
+    <string name="newListNamePlaceholder">nazwa listy zakupów</string>
+    <string name="message">wiadomość</string>
+    <string name="log_out">wyloguj</string>
+    <string name="ingredient">dodaj składnik</string>
+    <string name="find_food">znajdź jedzenie</string>
+    <string name="confirmUnfollowWarning">Czy na pewno chcesz przestać obserwować tę listę?</string>
+    <string name="clear">wyczyść zaznaczone</string>
+    <string name="chat">czat</string>
+    <string name="changesToAShoppingList">Lista została zmieniona</string>
+    <string name="cancel">Anuluj</string>
+    <string name="at">w</string>
+    <string name="addFriendPlaceholder">znajdź znajomego przez email</string>
+    <string name="addFriend">dodaj znajomego</string>
+    <string name="addedToShoppingList">został dodany do listy zakupów</string>
+    <string name="action_user">szczegóły użytkownika</string>
+    <string name="action_settings">ustawienia listy</string>
+</resources>
